@@ -4,6 +4,7 @@
 // ==================================================
 
 using Microsoft.OpenApi.Models;
+using Sheenam.Api.Brokers.Storages;
 
 namespace Sheenam.Api
 {
@@ -17,6 +18,7 @@ namespace Sheenam.Api
         {
             var apiInfo = new OpenApiInfo();
 
+            services.AddDbContext<StorageBroker>();
             services.AddControllers();
 
             services.AddSwaggerGen(options =>
