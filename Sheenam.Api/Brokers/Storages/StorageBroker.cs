@@ -8,9 +8,10 @@ using EFxceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
+
 namespace Sheenam.Api.Brokers.Storages
 {
-    public partial class StorageBroker : EFxceptionsContext
+    public partial class StorageBroker : EFxceptionsContext, IStorageBroker
     {
         private readonly IConfiguration configuration;
 
@@ -28,6 +29,11 @@ namespace Sheenam.Api.Brokers.Storages
             optionsBuilder.UseSqlServer(connectionString);
         }
 
-        public override void Dispose() { }         
+        public override void Dispose() { }
+
+        public ValueTask<Guest> InsertGuestAsync(Guest guest)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
