@@ -7,7 +7,7 @@
 using EFxceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-
+using Sheenam.Api.Models.Foundations.Guests;
 
 namespace Sheenam.Api.Brokers.Storages
 {
@@ -31,9 +31,6 @@ namespace Sheenam.Api.Brokers.Storages
 
         public override void Dispose() { }
 
-        public ValueTask<Guest> InsertGuestAsync(Guest guest)
-        {
-            throw new NotImplementedException();
-        }
+      
     }
 }
