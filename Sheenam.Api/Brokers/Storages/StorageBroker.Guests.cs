@@ -11,6 +11,11 @@ namespace Sheenam.Api.Brokers.Storages
 {
     public partial class StorageBroker
     {
+        public StorageBroker(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
         public DbSet<Guest> Guests {get;set;}
 
         public async ValueTask<Guest> InsertGuestAsync(Guest guest)
