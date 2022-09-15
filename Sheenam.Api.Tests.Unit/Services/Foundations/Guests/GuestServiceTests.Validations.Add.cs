@@ -51,8 +51,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
         public async Task ShouldThrowValidationExceptionOnAddIfGuestIsInvalidAndLogItAsync(
             string invalidText)
         {
-            //given
-            
+            //given            
             var invalidGuest = new Guest
             {
                 FirstName = invalidText
@@ -96,8 +95,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             addGuestTask.AsTask());
 
             this.loggingBrokerMock.Verify(broker =>
-            broker.LogError(It.Is(SameExceptionAs(
-                expectedGuestValidationException))),
+            broker.LogError(It.Is(SameExceptionAs(expectedGuestValidationException))),
                 Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
