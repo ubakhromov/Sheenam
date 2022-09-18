@@ -8,12 +8,11 @@ using Xeptions;
 
 namespace Sheenam.Api.Models.Foundations.Guests.Exceptions
 {
-    public class FailedGuestStorageException : Xeption
+    public class AlreadyExistGuestException : Xeption
     {
-        public FailedGuestStorageException(Exception innerException)
-            : base(message: "Failed guest storage error occured, contact support", 
+        public AlreadyExistGuestException(Exception innerException)
+            : base(message: "Already exist guest error occured, contact support",
                   innerException)
         {}
-
     }
 }

@@ -3,6 +3,7 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Moq;
 using Sheenam.Api.Models.Foundations.Guests;
@@ -47,6 +48,44 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowCriticalDependencyExceptionOnAddIfDuplicateKeyErrorOccursAndLogItAsync()
+        {
+            //given
+            Guest someGuest = CreateRandomGuest();
+            DuplicateKeyException duplicateKeyException = new DuplicateKeyException();
+            var alreadyExistGuestException = new AlreadyExistGuestException(duplicateKeyException);
+
+            var expectedGuestDependencyException =
+               new GuestDependencyException(alreadyExistGuestException);
+
+
+            this.storageBrokerMock.Setup(broker =>
+            broker.InsertGuestAsync(someGuest))
+                .ThrowsAsync(duplicateKeyException);
+
+            //when 
+            ValueTask<Guest> addGuestTask =
+               this.guestServices.AddGuestAsync(someGuest);
+
+            //then
+            await Assert.ThrowsAsync<GuestDependencyException>(() =>
+            addGuestTask.AsTask());
+
+            this.storageBrokerMock.Verify(broker =>
+            broker.InsertGuestAsync(someGuest),
+            Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+            broker.LogError(It.Is(SameExceptionAs(
+                expectedGuestDependencyException))),
+                Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+
         }
 
     }
