@@ -8,10 +8,11 @@ using Xeptions;
 
 namespace Sheenam.Api.Models.Foundations.Guests.Exceptions
 {
-    public class AlreadyExistGuestException : Xeption
+    public class GuestDependencyValidationException :Xeption
     {
-        public AlreadyExistGuestException(Exception innerException)
-            : base(message: "Guest already exist", innerException)
+        public GuestDependencyValidationException(Xeption innerException)
+            : base (message: "Guest dependency validation error occurred, please fix the error and try again",
+                  innerException)
         {}
     }
 }

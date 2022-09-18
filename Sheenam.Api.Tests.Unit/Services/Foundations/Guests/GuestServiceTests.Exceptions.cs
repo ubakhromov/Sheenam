@@ -3,6 +3,7 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System.Drawing;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Moq;
@@ -55,11 +56,16 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
         {
             //given
             Guest someGuest = CreateRandomGuest();
-            DuplicateKeyException duplicateKeyException = new DuplicateKeyException();
-            var alreadyExistGuestException = new AlreadyExistGuestException(duplicateKeyException);
+            string someMessage = GetRandomString();
 
-            var expectedGuestDependencyException =
-               new GuestDependencyException(alreadyExistGuestException);
+            DuplicateKeyException duplicateKeyException = 
+                new DuplicateKeyException(someMessage);
+
+            var alreadyExistGuestException = 
+                new AlreadyExistGuestException(duplicateKeyException);
+
+            var excpectedGuestDependencyValidationException =
+               new GuestDependencyValidationException(alreadyExistGuestException);
 
 
             this.storageBrokerMock.Setup(broker =>
@@ -71,7 +77,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
                this.guestServices.AddGuestAsync(someGuest);
 
             //then
-            await Assert.ThrowsAsync<GuestDependencyException>(() =>
+            await Assert.ThrowsAsync<GuestDependencyValidationException>(() =>
             addGuestTask.AsTask());
 
             this.storageBrokerMock.Verify(broker =>
@@ -80,13 +86,11 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
 
             this.loggingBrokerMock.Verify(broker =>
             broker.LogError(It.Is(SameExceptionAs(
-                expectedGuestDependencyException))),
+                excpectedGuestDependencyValidationException))),
                 Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
-
         }
-
     }
 }
