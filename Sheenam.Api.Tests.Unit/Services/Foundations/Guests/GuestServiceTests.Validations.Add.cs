@@ -4,6 +4,7 @@
 // ==================================================
 
 
+using FluentAssertions;
 using Moq;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
@@ -90,12 +91,18 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             ValueTask<Guest> addGuestTask =
                 this.guestServices.AddGuestAsync(invalidGuest);
 
+            GuestValidationException actualGuestValidationException =
+                await Assert.ThrowsAsync<GuestValidationException>(() =>
+                addGuestTask.AsTask());
+
+
             //then
-            await Assert.ThrowsAsync<GuestValidationException>(() =>
-            addGuestTask.AsTask());
+            actualGuestValidationException.Should().BeEquivalentTo(
+                expectedGuestValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
-            broker.LogError(It.Is(SameExceptionAs(expectedGuestValidationException))),
+            broker.LogError(It.Is(SameExceptionAs(
+                expectedGuestValidationException))),
                 Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
@@ -103,6 +110,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]

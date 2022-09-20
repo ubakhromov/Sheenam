@@ -41,13 +41,13 @@ namespace Sheenam.Api.Services.Foundations.Guests
         private static dynamic IsInvalid(string text) => new
         {
             Condition = string.IsNullOrWhiteSpace(text),
-            Message = "Id is required"
+            Message = "Text is required"
         };
 
         private static dynamic IsInvalid(DateTimeOffset date) => new
         {
             Condition = date == default,
-            Message = "Date is required"
+            Message = "Date of Birth is required"
         };
 
         private static dynamic IsInvalid(GenderType gender) => new
