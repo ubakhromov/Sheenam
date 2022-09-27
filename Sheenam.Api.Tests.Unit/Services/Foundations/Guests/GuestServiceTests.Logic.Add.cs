@@ -24,8 +24,8 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             Guest expectedGuest = returningGuest.DeepClone();
 
             this.storageBrokerMock.Setup(broker =>
-            broker.InsertGuestAsync(inputGuest))
-                .ReturnsAsync(returningGuest);
+                broker.InsertGuestAsync(inputGuest))
+                    .ReturnsAsync(returningGuest);
 
             //when
             Guest actualGuest =
@@ -35,8 +35,8 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             actualGuest.Should().BeEquivalentTo(expectedGuest);
 
             this.storageBrokerMock.Verify(broker =>
-              broker.InsertGuestAsync(inputGuest),
-              Times.Once);
+                broker.InsertGuestAsync(inputGuest),
+                    Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
