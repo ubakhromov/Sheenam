@@ -1,82 +1,56 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿//===================================================
+// Copyright (c) Coalition of Good-Hearted Engineers 
+// Free To Use To Find Comfort and Peace
+// ==================================================
+
 using Microsoft.AspNetCore.Mvc;
+using RESTFulSense.Controllers;
+using Sheenam.Api.Models.Foundations.Guests;
+using Sheenam.Api.Models.Foundations.Guests.Exceptions;
+using Sheenam.Api.Services.Foundations.Guests;
 
 namespace Sheenam.Api.Controllers
 {
-    public class GuestsController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class GuestsController : RESTFulController
     {
-        // GET: GuestsController
-        public ActionResult Index()
+        private readonly IGuestServices guestService;
+
+        public GuestsController(IGuestServices guestService)
         {
-            return View();
+            this.guestService = guestService;
         }
 
-        // GET: GuestsController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: GuestsController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: GuestsController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async ValueTask<ActionResult<Guest>> PostGuestAsync(Guest guest)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+                Guest postedGuest = await this.guestService.AddGuestAsync(guest);
 
-        // GET: GuestsController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: GuestsController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
+                return Created(postedGuest);
             }
-            catch
+            catch (GuestValidationException guestValidationException)
             {
-                return View();
+                return BadRequest(guestValidationException.InnerException);
             }
-        }
-
-        // GET: GuestsController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: GuestsController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
+            catch (GuestDependencyValidationException guestDependencyValidationException)
+                when (guestDependencyValidationException.InnerException is AlreadyExistGuestException)
             {
-                return RedirectToAction(nameof(Index));
+                return Conflict(guestDependencyValidationException.InnerException);
             }
-            catch
+            catch (GuestDependencyValidationException guestDependencyValidationException)
             {
-                return View();
+                return BadRequest(guestDependencyValidationException.InnerException);
+            }
+            catch (GuestDependencyException guestDependencyException)
+            {
+                return InternalServerError(guestDependencyException.InnerException);
+            }
+            catch (GuestServiceException guestServiceException)
+            {
+                return InternalServerError(guestServiceException.InnerException);
             }
         }
     }
