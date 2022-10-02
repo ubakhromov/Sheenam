@@ -28,8 +28,15 @@ namespace Sheenam.Api.Brokers.Storages
             await broker.SaveChangesAsync();
 
             return guestEntityEntry.Entity;
-
         }
 
+        public IQueryable<Guest> SelectAllGuests()
+        {
+            using var broker = 
+                new StorageBroker(
+                    this.configuration);
+
+            return broker.Guests;
+        }
     }
 }

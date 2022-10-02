@@ -21,6 +21,8 @@ namespace Sheenam.Api.Brokers.Storages
             this.logger = logger;
         }
 
+        private IQueryable<T> SelectAll<T>() where T : class => this.Set<T>();
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionString =
