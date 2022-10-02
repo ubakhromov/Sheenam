@@ -16,7 +16,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
         public async Task ShouldRetrieveGuests()
         {
             //given
-            IQueryable<Guest> randomGuests = (IQueryable<Guest>)CreateRandomGuest();
+            IQueryable<Guest> randomGuests = CreatedRandomGuests();
             IQueryable<Guest> storageGuests = randomGuests;
             IQueryable<Guest> expectedGuests = storageGuests;
 

@@ -32,7 +32,9 @@ namespace Sheenam.Api.Brokers.Storages
 
         public IQueryable<Guest> SelectAllGuests()
         {
-            using var broker = new StorageBroker(this.configuration);
+            using var broker = 
+                new StorageBroker(
+                    this.configuration);
 
             return broker.Guests;
         }

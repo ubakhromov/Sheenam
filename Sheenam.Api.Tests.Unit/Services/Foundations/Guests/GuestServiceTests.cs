@@ -36,6 +36,13 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
        private static Guest CreateRandomGuest()=>
             CreateGuestFiller(date: GetRandomDateTimeOffset()).Create();
 
+        private static IQueryable<Guest> CreatedRandomGuests()
+        {
+            return CreateGuestFiller(date: GetRandomDateTimeOffset())
+                .Create(count: GetRandomNumber())
+                    .AsQueryable();
+        }
+
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
 
@@ -63,8 +70,6 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
 
             actualException => actualException.SameExceptionAs(expectedException);
-
-        
 
         private static Filler<Guest> CreateGuestFiller(DateTimeOffset date)
         {
