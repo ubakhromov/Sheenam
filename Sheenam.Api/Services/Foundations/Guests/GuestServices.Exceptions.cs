@@ -51,7 +51,7 @@ namespace Sheenam.Api.Services.Foundations.Guests
                     new FailedGuestServiceException(exception);
 
                 throw CreateAndLogServiceException(failedGuestServiceException);
-            }
+            }            
         }
 
         private IQueryable<Guest> TryCatch(ReturningGuestsFunction returningGuestsFunction)
@@ -67,10 +67,10 @@ namespace Sheenam.Api.Services.Foundations.Guests
 
                 throw CreateAndLogCriticalDependencyException(failedGuestStorageException);
             }
-            catch (Xeption exception)
+            catch (Exception serviceException)
             {
                 var failedGuestServiceException =
-                    new FailedGuestServiceException(exception);
+                    new FailedGuestServiceException(serviceException);
                 
                 throw CreateAndLogServiceException(failedGuestServiceException);
             }
