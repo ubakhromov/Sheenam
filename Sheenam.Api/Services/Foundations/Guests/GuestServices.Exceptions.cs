@@ -60,6 +60,13 @@ namespace Sheenam.Api.Services.Foundations.Guests
             {
                 return returningGuestsFunction();
             }
+            catch (SqlException sqlException)
+            {
+                var failedGuestStorageException =
+                    new FailedGuestStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedGuestStorageException);
+            }
             catch (Xeption exception)
             {
                 var failedGuestServiceException =
