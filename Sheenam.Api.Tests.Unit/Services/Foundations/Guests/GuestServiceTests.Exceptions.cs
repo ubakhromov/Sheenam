@@ -43,7 +43,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker=>
-                broker.LogCrtitical(It.Is(SameExceptionAs(
+                broker.LogCritical(It.Is(SameExceptionAs(
                     expectedGuestDependencyException))),
                         Times.Once);
 

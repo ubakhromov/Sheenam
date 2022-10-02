@@ -16,7 +16,7 @@ namespace Sheenam.Api.Brokers.Loggings
         public void LogError(Exception exception)=>        
             this.logger.LogError(exception, exception.Message);
 
-        public void LogCrtitical(Exception exception) =>
+        public void LogCritical(Exception exception) =>
             this.logger.LogCritical(exception, exception.Message);
 
         public void LogTrace(string message) =>
