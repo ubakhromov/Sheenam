@@ -11,5 +11,6 @@ namespace Sheenam.Api.Brokers.Storages
     {
         ValueTask<Guest> InsertGuestAsync(Guest guest);
         IQueryable<Guest> SelectAllGuests();
+        ValueTask<Guest> SelectGuestsByIdAsync(Guid GuestId);
     }
 }
