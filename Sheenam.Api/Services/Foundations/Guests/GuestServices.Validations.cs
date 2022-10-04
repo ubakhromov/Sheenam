@@ -5,6 +5,7 @@
 
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
+using System.Reflection.Metadata;
 
 namespace Sheenam.Api.Services.Foundations.Guests
 {
@@ -22,6 +23,17 @@ namespace Sheenam.Api.Services.Foundations.Guests
                 (Rule: IsInvalid(guest.Email), Parameter: nameof(Guest.Email)),
                 (Rule: IsInvalid(guest.Address), Parameter: nameof(Guest.Address)),
                 (Rule: IsInvalid(guest.Gender), Parameter: nameof(Guest.Gender)));
+        }
+
+        private void ValidateGuestId(Guid guestId) =>
+            Validate((Rule: IsInvalid(guestId), Parameter: nameof(Guest.Id)));
+
+        private static void ValidateStorageGuest(Guest maybeGuest, Guid guestId)
+        {
+            if (maybeGuest is null)
+            {
+                throw new NotFoundGuestException(guestId);
+            }
         }
 
         private void ValidateGuestNotNull(Guest guest )

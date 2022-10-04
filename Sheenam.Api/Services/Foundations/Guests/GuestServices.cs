@@ -3,6 +3,7 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using Microsoft.Extensions.Hosting;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Models.Foundations.Guests;
@@ -34,6 +35,19 @@ namespace Sheenam.Api.Services.Foundations.Guests
             TryCatch(() =>
             {
                 return this.storageBroker.SelectAllGuests();
+            });
+
+        public ValueTask<Guest> RetrieveGuestByIdAsync(Guid guestId) =>
+            TryCatch(async () =>
+            {
+                ValidateGuestId(guestId);
+
+                Guest maybeGuest = await this.storageBroker
+                    .SelectGuestsByIdAsync(guestId);
+
+                ValidateStorageGuest(maybeGuest, guestId);
+
+                 return maybeGuest;
             });
     }
 }
