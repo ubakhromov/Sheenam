@@ -5,6 +5,7 @@
 
 
 using FluentAssertions;
+using Microsoft.Identity.Client;
 using Moq;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
@@ -52,7 +53,49 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
                     Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();            
+        }
+
+        [Fact]
+        public async Task ShouldThrowNotFoundExceptionOnRetrieveByIdIfGuestIsNotFoundAndLogItAsync()
+        {
+            //given
+            Guid someGuestId = Guid.NewGuid();
+            Guest noGuest = null;
+
+            var notFoundGuestException = 
+                new NotFoundGuestException(someGuestId);
+
+            var expectedGuestValidationException = 
+                new GuestValidationException(notFoundGuestException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectGuestsByIdAsync(It.IsAny<Guid>()))
+                    .ReturnsAsync(noGuest);
+            
+            //when
+            ValueTask<Guest> retrieveGuestByIdTask = 
+                this.guestServices.RetrieveGuestByIdAsync(someGuestId);
+
+            GuestValidationException actualGuestValidationException =
+                await Assert.ThrowsAsync<GuestValidationException>(
+                    retrieveGuestByIdTask.AsTask);
+
+            //then
+            actualGuestValidationException.Should().BeEquivalentTo(
+                expectedGuestValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectGuestsByIdAsync(It.IsAny<Guid>()),
+                    Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedGuestValidationException))),
+                        Times.Once);
+
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
