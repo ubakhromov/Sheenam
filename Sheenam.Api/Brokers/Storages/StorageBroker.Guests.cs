@@ -5,6 +5,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Hosting;
 using Sheenam.Api.Models.Foundations.Guests;
 
 namespace Sheenam.Api.Brokers.Storages
@@ -35,8 +36,15 @@ namespace Sheenam.Api.Brokers.Storages
             using var broker = 
                 new StorageBroker(
                     this.configuration);
-
             return broker.Guests;
+        }
+
+        public async ValueTask<Guest> SelectGuestsByIdAsync(Guid postId)
+        {
+            using var broker =
+                new StorageBroker(this.configuration);
+
+            return await broker.Guests.FindAsync(postId);
         }
     }
 }
