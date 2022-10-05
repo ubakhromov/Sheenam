@@ -74,5 +74,33 @@ namespace Sheenam.Api.Controllers
                 return InternalServerError(guestServiceException);
             }
         }
+
+        [HttpGet("{guestId}")]
+        public async ValueTask<ActionResult<Guest>> GetGuestByIdAsync(Guid guestId)
+        {
+            try
+            {
+                Guest guest = await this.guestService.RetrieveGuestByIdAsync(guestId);
+
+                return Ok(guest);
+            }
+            catch(GuestValidationException guestValidationException)
+                when (guestValidationException.InnerException is NotFoundGuestException)
+            {
+                return NotFound(guestValidationException.InnerException);
+            }
+            catch(GuestValidationException guestValidationException)
+            {
+                return BadRequest(guestValidationException.InnerException);
+            }
+            catch(GuestDependencyException guestDependencyException)
+            {
+                return InternalServerError(guestDependencyException);
+            }
+            catch(GuestServiceException guestServiceException)
+            {
+                return InternalServerError(guestServiceException);
+            }
+        }
     }
 }
