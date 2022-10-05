@@ -3,7 +3,6 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
-
 using FluentAssertions;
 using Microsoft.Identity.Client;
 using Moq;
