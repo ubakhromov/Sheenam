@@ -8,6 +8,7 @@ using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
 using System.Data;
 using System.Reflection.Metadata;
+using System.Security.Cryptography;
 
 namespace Sheenam.Api.Services.Foundations.Guests
 {
@@ -119,5 +120,13 @@ namespace Sheenam.Api.Services.Foundations.Guests
 
             invalidGuestException.ThrowIfContainsErrors();
         }       
+
+        private void ValidateGuest(Guest guest)
+        {
+            if(guest is null)
+            {
+                throw new NullGuestException();
+            }
+        }
     }
 }

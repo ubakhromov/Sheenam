@@ -54,17 +54,21 @@ namespace Sheenam.Api.Services.Foundations.Guests
                  return maybeGuest;
             });
 
-      public async ValueTask<Guest> ModifyGuestAsync(Guest guest)
-        {
-            Guest storageGuest =
+        public ValueTask<Guest> ModifyGuestAsync(Guest guest) =>
+            TryCatch(async() =>
+            {
+
+                ValidateGuest(guest);
+
+                Guest storageGuest =
                 await this.storageBroker.
                     SelectGuestsByIdAsync(guest.Id);
 
-            DateTimeOffset now = 
+                DateTimeOffset now = 
                 this.dateTimeBroker.GetCurrentDateTime();
 
-            return await this.storageBroker.
-                UpdateGuestAsync(guest);
-        }
+                return await this.storageBroker.
+                    UpdateGuestAsync(guest);
+            });
     }
 }
