@@ -47,5 +47,39 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();            
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyWhenGuestIdIsInvalidAndLogItAsync()
+        {
+            //given
+            Guid invalidGuestId = Guid.Empty;
+            Guest randomGuest = CreateRandomGuest();
+            Guest invalidGuest = randomGuest;
+            invalidGuest.Id = invalidGuestId;
+
+            var invalidGuestException = new InvalidGuestException(
+                parameterName: nameof(Guest.Id),
+                parameterValue: invalidGuest.Id);
+
+            var expectedGuestValidationException = 
+                new GuestValidationException(invalidGuestException);
+
+            //when
+            ValueTask<Guest> modifyGuestTask =
+                this.guestServices.ModifyGuestAsync(invalidGuest);
+
+            //then
+            await Assert.ThrowsAsync<GuestValidationException>(() =>
+                modifyGuestTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedGuestValidationException))),
+                        Times.Once);
+            
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
