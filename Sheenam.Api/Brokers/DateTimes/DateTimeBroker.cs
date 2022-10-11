@@ -8,7 +8,7 @@ namespace Sheenam.Api.Brokers.DateTimes
 {
     public class DateTimeBroker : IDateTimeBroker
     {
-      public DateTimeOffset GetCurrentDateTimeOffset() =>
+      public DateTimeOffset GetCurrentDateTime() =>
             DateTimeOffset.UtcNow;
     }
 }

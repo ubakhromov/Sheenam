@@ -6,7 +6,6 @@
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Hosting;
 using Moq;
 using Sheenam.Api.Brokers.DateTimes;
 using Sheenam.Api.Brokers.Loggings;
@@ -50,6 +49,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
+
 
         private static Guest CreateRandomGuest(DateTimeOffset dates) =>
             CreateGuestFiller(dates).Create();
