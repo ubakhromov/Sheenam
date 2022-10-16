@@ -48,8 +48,9 @@ namespace Sheenam.Api.Services.Foundations.Guests
                     secondDate: guest.CreatedDate,
                     secondDateName: nameof(Guest.CreatedDate)),
 
-                Parameter: nameof(Guest.UpdatedDate))               
-            );
+                Parameter: nameof(Guest.UpdatedDate)),
+
+                (Rule: IsNotRecent(guest.UpdatedDate), Parameter: nameof(Guest.UpdatedDate)));            
         }
 
         private void ValidateGuestId(Guid guestId) =>
@@ -86,7 +87,7 @@ namespace Sheenam.Api.Services.Foundations.Guests
         private static dynamic IsInvalid(DateTimeOffset date) => new
         {
             Condition = date == default,
-            Message = "Date of Birth is required"
+            Message = "Date is required"
         };
 
         private static dynamic IsInvalid(GenderType gender) => new
@@ -95,6 +96,7 @@ namespace Sheenam.Api.Services.Foundations.Guests
             Message = "Value is invalid" 
         };
 
+        
         private static dynamic IsSame(
             DateTimeOffset firstDate,
             DateTimeOffset secondDate,
@@ -103,8 +105,6 @@ namespace Sheenam.Api.Services.Foundations.Guests
                 Condition = firstDate == secondDate,
                 Message = $"Date is the same as {secondDateName}"
             };
-
-
 
         private dynamic IsNotRecent(DateTimeOffset dateTimeOffset) => new
         {

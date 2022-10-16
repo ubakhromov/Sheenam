@@ -66,9 +66,6 @@ namespace Sheenam.Api.Services.Foundations.Guests
                 
                 ValidateStorageGuest(storageGuest, guest.Id);
 
-                DateTimeOffset now = 
-                this.dateTimeBroker.GetCurrentDateTime();
-
                 return await this.storageBroker.
                     UpdateGuestAsync(guest);
             });

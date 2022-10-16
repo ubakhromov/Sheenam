@@ -72,17 +72,14 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
                 key: nameof(Guest.FirstName),
                 values: "Text is required");
 
-            invalidGuestException.AddData(
-               key: nameof(Guest.Email),
-               values: "Text is required");
-
+           
             invalidGuestException.AddData(
                 key: nameof(Guest.LastName),
                 values: "Text is required");
 
             invalidGuestException.AddData(
                 key: nameof(Guest.DateOfBirth),
-                values: "Date of Birth is required");
+                values: "Date is required");
 
             invalidGuestException.AddData(
                 key: nameof(Guest.Email),
@@ -115,11 +112,16 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
 
             //when
             ValueTask<Guest> modifyGuestTask =
-                this.guestServices.ModifyGuestAsync(invalidGuest);            
+                this.guestServices.ModifyGuestAsync(invalidGuest);   
+            
+            GuestValidationException actualGuestValidationException =
+                await Assert.ThrowsAsync<GuestValidationException>(() =>
+                    modifyGuestTask.AsTask());
+
 
             //then
-            await Assert.ThrowsAsync<GuestValidationException>(() =>
-                modifyGuestTask.AsTask());
+            actualGuestValidationException.Should().BeEquivalentTo(
+                expectedGuestValidationException);
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(),
