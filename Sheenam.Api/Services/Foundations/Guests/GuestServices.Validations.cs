@@ -50,7 +50,8 @@ namespace Sheenam.Api.Services.Foundations.Guests
 
                 Parameter: nameof(Guest.UpdatedDate)),
 
-                (Rule: IsNotRecent(guest.UpdatedDate), Parameter: nameof(Guest.UpdatedDate)));            
+                (Rule: IsNotRecent(guest.UpdatedDate),
+                    Parameter: nameof(Guest.UpdatedDate)));            
         }
 
         private void ValidateGuestId(Guid guestId) =>
@@ -95,7 +96,6 @@ namespace Sheenam.Api.Services.Foundations.Guests
             Condition= Enum.IsDefined(gender) is false,
             Message = "Value is invalid" 
         };
-
         
         private static dynamic IsSame(
             DateTimeOffset firstDate,

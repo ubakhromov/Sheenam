@@ -118,7 +118,6 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
                 await Assert.ThrowsAsync<GuestValidationException>(() =>
                     modifyGuestTask.AsTask());
 
-
             //then
             actualGuestValidationException.Should().BeEquivalentTo(
                 expectedGuestValidationException);
