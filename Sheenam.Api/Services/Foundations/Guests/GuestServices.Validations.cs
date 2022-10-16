@@ -48,7 +48,7 @@ namespace Sheenam.Api.Services.Foundations.Guests
                     secondDate: guest.CreatedDate,
                     secondDateName: nameof(Guest.CreatedDate)),
 
-                Parameter: nameof(Guest.UpdatedDate))
+                Parameter: nameof(Guest.UpdatedDate))               
             );
         }
 
@@ -103,7 +103,26 @@ namespace Sheenam.Api.Services.Foundations.Guests
                 Condition = firstDate == secondDate,
                 Message = $"Date is the same as {secondDateName}"
             };
-       
+
+
+
+        private dynamic IsNotRecent(DateTimeOffset dateTimeOffset) => new
+        {
+            Condition = IsDateNotRecent(dateTimeOffset),
+            Message = "Date is not recent"
+        };
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime =
+                this.dateTimeBroker.GetCurrentDateTime();
+
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+            TimeSpan oneMinute = TimeSpan.FromMinutes(1);
+
+            return timeDifference.Duration() > oneMinute;
+        }
+
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
             var invalidGuestException = new InvalidGuestException();
@@ -119,14 +138,6 @@ namespace Sheenam.Api.Services.Foundations.Guests
             }
 
             invalidGuestException.ThrowIfContainsErrors();
-        }       
-
-        private void ValidateGuest(Guest guest)
-        {
-            if(guest is null)
-            {
-                throw new NullGuestException();
-            }
-        }
+        }               
     }
 }

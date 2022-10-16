@@ -58,11 +58,13 @@ namespace Sheenam.Api.Services.Foundations.Guests
             TryCatch(async() =>
             {
 
-                ValidateGuest(guest);
+                ValidateGuestOnModify(guest);
 
                 Guest storageGuest =
                 await this.storageBroker.
                     SelectGuestsByIdAsync(guest.Id);
+                
+                ValidateStorageGuest(storageGuest, guest.Id);
 
                 DateTimeOffset now = 
                 this.dateTimeBroker.GetCurrentDateTime();

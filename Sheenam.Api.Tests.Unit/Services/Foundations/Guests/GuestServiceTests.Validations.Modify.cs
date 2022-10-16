@@ -3,6 +3,8 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
@@ -48,38 +50,93 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             this.storageBrokerMock.VerifyNoOtherCalls();            
         }
 
-        [Fact]
-        public async Task ShouldThrowValidationExceptionOnModifyWhenGuestIdIsInvalidAndLogItAsync()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task ShouldThrowValidationExceptionOnModifyIfGuestIsInvalidAndLogItAsync(string invalidText)
         {
             //given
-            Guid invalidGuestId = Guid.Empty;
-            Guest randomGuest = CreateRandomGuest();
-            Guest invalidGuest = randomGuest;
-            invalidGuest.Id = invalidGuestId;
+            var invalidGuest = new Guest
+            {
+                FirstName = invalidText
+            };
 
-            var invalidGuestException = new InvalidGuestException(
-                parameterName: nameof(Guest.Id),
-                parameterValue: invalidGuest.Id);
+            var invalidGuestException = new InvalidGuestException();
+
+            invalidGuestException.AddData(
+                key: nameof(Guest.Id),
+                values: "Id is required");
+
+            invalidGuestException.AddData(
+                key: nameof(Guest.FirstName),
+                values: "Text is required");
+
+            invalidGuestException.AddData(
+               key: nameof(Guest.Email),
+               values: "Text is required");
+
+            invalidGuestException.AddData(
+                key: nameof(Guest.LastName),
+                values: "Text is required");
+
+            invalidGuestException.AddData(
+                key: nameof(Guest.DateOfBirth),
+                values: "Date of Birth is required");
+
+            invalidGuestException.AddData(
+                key: nameof(Guest.Email),
+                values: "Text is required");
+
+            invalidGuestException.AddData(
+                key: nameof(Guest.Address),
+                values: "Text is required");
+
+            invalidGuestException.AddData(
+               key: nameof(Guest.CreatedDate),
+               values: "Date is required");
+
+            invalidGuestException.AddData(
+                key: nameof(Guest.UpdatedDate),
+                    values: new[]
+                    {
+                        "Date is required",
+                        $"Date is the same as {nameof(Guest.CreatedDate)}",
+                        "Date is not recent"
+                    }
+                );
 
             var expectedGuestValidationException = 
                 new GuestValidationException(invalidGuestException);
 
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Returns(GetRandomDateTimeOffset);
+
             //when
             ValueTask<Guest> modifyGuestTask =
-                this.guestServices.ModifyGuestAsync(invalidGuest);
+                this.guestServices.ModifyGuestAsync(invalidGuest);            
 
             //then
             await Assert.ThrowsAsync<GuestValidationException>(() =>
                 modifyGuestTask.AsTask());
 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once);
+
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedGuestValidationException))),
                         Times.Once);
-            
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdateGuestAsync(It.IsAny<Guest>()),
+                    Times.Never);
+
             this.loggingBrokerMock.VerifyNoOtherCalls();
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
