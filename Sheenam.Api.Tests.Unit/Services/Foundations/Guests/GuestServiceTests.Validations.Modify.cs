@@ -247,5 +247,60 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfGuestDoesNotExistAndLogItAsync()
+        {
+            //given
+            int randomNegativeMinutes = GetRandomNegativeNumber();
+            DateTimeOffset dateTime = GetRandomDateTimeOffset();
+            Guest randomGuest = CreateRandomGuest(dateTime);
+            Guest nonExistGuest = randomGuest;
+            nonExistGuest.CreatedDate = dateTime.AddMinutes(randomNegativeMinutes);
+            Guest nullGuest = null;
+
+            var notFoundGuestException =
+                new NotFoundGuestException(nonExistGuest.Id);
+
+            var expectedGuestValidationException = 
+                new GuestValidationException(notFoundGuestException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Returns(dateTime);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectGuestsByIdAsync(nonExistGuest.Id))
+                    .ReturnsAsync(nullGuest);
+
+            //when
+            ValueTask<Guest> modifyGuestTask =
+                this.guestServices.ModifyGuestAsync(nonExistGuest);
+
+            GuestValidationException actualGuestValidationException =
+                await Assert.ThrowsAsync<GuestValidationException>(() =>
+                    modifyGuestTask.AsTask());
+
+            //then
+            actualGuestValidationException.Should().BeEquivalentTo(
+                expectedGuestValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectGuestsByIdAsync(nonExistGuest.Id),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedGuestValidationException))),
+                        Times.Once);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
