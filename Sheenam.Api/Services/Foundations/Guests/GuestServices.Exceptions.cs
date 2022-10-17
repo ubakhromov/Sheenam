@@ -50,7 +50,7 @@ namespace Sheenam.Api.Services.Foundations.Guests
 
                 throw CreateAndLogDependencyValidationException(alreadyExistGuestException);
             }
-            catch(DbUpdateException dbUpdateException)
+            catch (DbUpdateException dbUpdateException)
             {
                 var failedGuestStorageException = 
                     new FailedGuestStorageException(dbUpdateException);

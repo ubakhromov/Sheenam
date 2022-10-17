@@ -3,6 +3,7 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using EFxceptions.Models.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
@@ -63,6 +64,62 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();              
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfReferenceErrorOccursAndLogItAsync()
+        {
+            //given
+            Guest someGuest = CreateRandomGuest();
+            Guest foreignKeyConflictedGuest = someGuest;
+            string randomMessage = GetRandomString();
+            string exceptionMessage = randomMessage;
+
+            var foreignKeyConstraintConflictException =
+                new ForeignKeyConstraintConflictException(exceptionMessage);
+
+            var invalidGuestReferenceException = 
+                new InvalidGuestReferenceException(foreignKeyConstraintConflictException);
+
+            var guestDependencyValidationException = 
+                new GuestDependencyValidationException(invalidGuestReferenceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Throws(foreignKeyConstraintConflictException);
+
+            //when
+            ValueTask<Guest> modifyGuestTask =
+                this.guestServices.ModifyGuestAsync(foreignKeyConflictedGuest);
+
+            GuestDependencyValidationException actualGuestDependencyValidationException =
+                await Assert.ThrowsAsync<GuestDependencyValidationException>(() =>
+                    modifyGuestTask.AsTask());
+
+            //then
+            actualGuestDependencyValidationException.Should().BeEquivalentTo(
+                guestDependencyValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+               broker.GetCurrentDateTime(),
+                   Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectGuestsByIdAsync(foreignKeyConflictedGuest.Id),
+                    Times.Never);
+
+            this.loggingBrokerMock.Verify(broker =>
+               broker.LogError(It.Is(SameExceptionAs(
+                   guestDependencyValidationException))),
+                       Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdateGuestAsync(foreignKeyConflictedGuest),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
