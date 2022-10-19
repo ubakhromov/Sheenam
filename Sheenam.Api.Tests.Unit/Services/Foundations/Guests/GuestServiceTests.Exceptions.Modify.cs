@@ -23,7 +23,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             Guest randomGuest = CreateRandomGuest();
             SqlException sqlException = GetSqlError();
 
-            var failedGuestStorageException = 
+            var failedGuestStorageException =
                 new FailedGuestStorageException(sqlException);
 
             var expectedGuestDependencyException =
@@ -64,7 +64,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();              
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -79,10 +79,10 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             var foreignKeyConstraintConflictException =
                 new ForeignKeyConstraintConflictException(exceptionMessage);
 
-            var invalidGuestReferenceException = 
+            var invalidGuestReferenceException =
                 new InvalidGuestReferenceException(foreignKeyConstraintConflictException);
 
-            var guestDependencyValidationException = 
+            var guestDependencyValidationException =
                 new GuestDependencyValidationException(invalidGuestReferenceException);
 
             this.dateTimeBrokerMock.Setup(broker =>
@@ -133,7 +133,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             var failedGuestStorageException =
                 new FailedGuestStorageException(databaseUpdateException);
 
-            var expectedGuestDependencyException = 
+            var expectedGuestDependencyException =
                 new GuestDependencyException(failedGuestStorageException);
 
             this.dateTimeBrokerMock.Setup(broker =>
@@ -180,13 +180,13 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             //given
             Guest randomGuest = CreateRandomGuest();
 
-            var databaseUpdateConcurrencyException  = 
+            var databaseUpdateConcurrencyException =
                 new DbUpdateConcurrencyException();
 
-            var lockedGuestException = 
+            var lockedGuestException =
                 new LockedGuestException(databaseUpdateConcurrencyException);
 
-            var expectedGuestDependencyValidationException = 
+            var expectedGuestDependencyValidationException =
                 new GuestDependencyValidationException(lockedGuestException);
 
             this.dateTimeBrokerMock.Setup(broker =>
@@ -213,6 +213,53 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedGuestDependencyValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdateGuestAsync(randomGuest),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnModifyIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            Guest randomGuest = CreateRandomGuest();
+            var serviceException = new Exception();
+
+            var failedGuestException =
+                new FailedGuestServiceException(serviceException);
+
+            var expectedGuestServiceException =
+                new GuestServiceException(failedGuestException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Throws(serviceException);
+
+            // when
+            ValueTask<Guest> modifyGuestTask =
+                this.guestServices.ModifyGuestAsync(randomGuest);
+
+            // then
+            await Assert.ThrowsAsync<GuestServiceException>(() =>
+                modifyGuestTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectGuestsByIdAsync(randomGuest.Id),
+                    Times.Never);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedGuestServiceException))),
                         Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
