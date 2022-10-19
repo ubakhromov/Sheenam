@@ -172,7 +172,56 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
 
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnModifyIfDatabaseUpdateConcurrencyErrorOccursAndLogItAsync()
+        {
+            //given
+            Guest randomGuest = CreateRandomGuest();
+
+            var databaseUpdateConcurrencyException  = 
+                new DbUpdateConcurrencyException();
+
+            var lockedGuestException = 
+                new LockedGuestException(databaseUpdateConcurrencyException);
+
+            var expectedGuestDependencyValidationException = 
+                new GuestDependencyValidationException(lockedGuestException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Throws(databaseUpdateConcurrencyException);
+
+            //when
+            ValueTask<Guest> modifyGuestTask =
+                this.guestServices.ModifyGuestAsync(randomGuest);
+
+            GuestDependencyValidationException actualGuestDependencyValidationException =
+                await Assert.ThrowsAsync<GuestDependencyValidationException>(() =>
+                    modifyGuestTask.AsTask());
+
+            //then
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectGuestsByIdAsync(randomGuest.Id),
+                    Times.Never);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedGuestDependencyValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdateGuestAsync(randomGuest),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

@@ -7,12 +7,10 @@ using Xeptions;
 
 namespace Sheenam.Api.Models.Foundations.Guests.Exceptions
 {
-    public class FailedGuestStorageException : Xeption
+    public class LockedGuestException : Xeption
     {
-        public FailedGuestStorageException(Exception innerException)
-            : base(message: "Failed guest storage error occured, contact support", 
-                  innerException)
+        public LockedGuestException(Exception innerException)
+            : base(message: "Locked guest record excpetion, please try again later", innerException)
         {}
-
     }
 }
