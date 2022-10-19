@@ -69,5 +69,13 @@ namespace Sheenam.Api.Services.Foundations.Guests
                 return await this.storageBroker.
                     UpdateGuestAsync(guest);
             });
+
+        public async ValueTask<Guest> RemoveGuestByIdAsync(Guid guestId)
+        {
+            Guest someGuest =
+                await this.storageBroker.SelectGuestsByIdAsync(guestId);
+
+            return await this.storageBroker.DeleteGuestAsync(someGuest);
+        }
     }
 }

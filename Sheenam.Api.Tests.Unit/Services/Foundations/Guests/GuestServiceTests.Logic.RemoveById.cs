@@ -35,7 +35,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
 
             //when
             Guest actualGuest = await this.guestServices
-                .RemoveGuestByIdAsyn(inputGuestId);
+                .RemoveGuestByIdAsync(inputGuestId);
 
             //then
             actualGuest.Should().BeEquivalentTo(expectedGuest);
