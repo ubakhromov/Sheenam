@@ -60,7 +60,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
         }
 
         [Fact]
-        public async Task ShouldThrowNotFoundExceptionOnRemoveProfileByIdIsNotFounfAndLogItAsync()
+        public async Task ShouldThrowNotFoundExceptionOnRemoveGuestByIdIsNotFoundAndLogItAsync()
         {
             //given
             Guid inputGuestId = Guid.NewGuid();
