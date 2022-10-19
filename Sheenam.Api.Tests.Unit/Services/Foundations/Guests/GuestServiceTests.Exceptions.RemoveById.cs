@@ -5,6 +5,7 @@
 
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
@@ -50,6 +51,51 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedGuestDependencyException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.DeleteGuestAsync(It.IsAny<Guest>()),
+                    Times.Never);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationOnRemoveIfDatabaseUpdateConcurrencyErrorOccursAndLogItAsync()
+        {
+            //given
+            Guid someGuestId = Guid.NewGuid();
+
+            var databaseUpdateConcurrencyException =
+                new DbUpdateConcurrencyException();
+
+            var lockedGuestException =
+                new LockedGuestException(databaseUpdateConcurrencyException);
+
+            var expectedGuestDependencyValidationException =
+                new GuestDependencyValidationException(lockedGuestException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectGuestsByIdAsync(It.IsAny<Guid>()))
+                    .ThrowsAsync(databaseUpdateConcurrencyException);
+
+            //when
+            ValueTask<Guest> removeGuestByIdTask =
+               this.guestServices.RemoveGuestByIdAsync(someGuestId);
+
+            // then
+            await Assert.ThrowsAsync<GuestDependencyValidationException>(() =>
+                removeGuestByIdTask.AsTask());
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectGuestsByIdAsync(It.IsAny<Guid>()),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedGuestDependencyValidationException))),
                         Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
