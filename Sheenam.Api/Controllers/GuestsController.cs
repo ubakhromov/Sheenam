@@ -5,6 +5,7 @@
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using RESTFulSense.Controllers;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
@@ -130,6 +131,44 @@ namespace Sheenam.Api.Controllers
             catch (GuestDependencyException guestDependencyException)
             {
                 return InternalServerError(guestDependencyException);
+            }
+            catch (GuestServiceException guestServiceException)
+            {
+                return InternalServerError(guestServiceException);
+            }
+        }
+
+        [HttpDelete("{postId}")]
+        public async ValueTask<ActionResult<Guest>> DeleteGuestByIdAsync(Guid postId)
+        {
+            try
+            {
+                Guest deletedGuest =
+                    await this.guestService.RemoveGuestByIdAsync(postId);
+
+                return Ok(deletedGuest);
+            }
+            catch (GuestValidationException guestValidationException)
+                when (guestValidationException.InnerException is NotFoundGuestException)
+            {
+                return NotFound(guestValidationException.InnerException);
+            }
+            catch (GuestValidationException guestValidationException)
+            {
+                return BadRequest(guestValidationException.InnerException);
+            }
+            catch (GuestDependencyValidationException guestDependencyValidationException)
+                when (guestDependencyValidationException.InnerException is LockedGuestException)
+            {
+                return Locked(guestDependencyValidationException.InnerException);
+            }
+            catch (GuestDependencyValidationException guestDependencyValidationException)
+            {
+                return BadRequest(guestDependencyValidationException);
+            }
+            catch (GuestDependencyException GuestDependencyException)
+            {
+                return InternalServerError(GuestDependencyException);
             }
             catch (GuestServiceException guestServiceException)
             {
