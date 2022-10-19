@@ -3,15 +3,14 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
-
 using Xeptions;
 
 namespace Sheenam.Api.Models.Foundations.Guests.Exceptions
 {
-    public class NotFoundGuestException : Xeption
+    public class LockedGuestException : Xeption
     {
-        public NotFoundGuestException(Guid guestId)
-            : base(message: $"Couldn't find guest with id: {guestId}.")
+        public LockedGuestException(Exception innerException)
+            : base(message: "Locked guest record excpetion, please try again later", innerException)
         {}
     }
 }

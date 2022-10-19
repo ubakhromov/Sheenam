@@ -50,7 +50,21 @@ namespace Sheenam.Api.Services.Foundations.Guests
 
                 throw CreateAndLogDependencyValidationException(alreadyExistGuestException);
             }
-            catch(DbUpdateException dbUpdateException)
+            catch (ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
+            {
+                var invalidGuestReferenceException =
+                    new InvalidGuestReferenceException(foreignKeyConstraintConflictException);
+
+                throw CreateAndLogDependencyValidationException(invalidGuestReferenceException);
+            }
+            catch (DbUpdateConcurrencyException databaseUpdateConcurrencyException)
+            {
+                var lockedGuestException =
+                    new LockedGuestException(databaseUpdateConcurrencyException);
+
+                throw CreateAndLogDependencyValidationException(lockedGuestException);
+            }
+            catch (DbUpdateException dbUpdateException)
             {
                 var failedGuestStorageException = 
                     new FailedGuestStorageException(dbUpdateException);

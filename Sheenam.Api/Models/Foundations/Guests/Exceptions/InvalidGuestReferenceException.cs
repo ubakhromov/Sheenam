@@ -8,10 +8,10 @@ using Xeptions;
 
 namespace Sheenam.Api.Models.Foundations.Guests.Exceptions
 {
-    public class NotFoundGuestException : Xeption
+    public class InvalidGuestReferenceException : Xeption
     {
-        public NotFoundGuestException(Guid guestId)
-            : base(message: $"Couldn't find guest with id: {guestId}.")
-        {}
+        public InvalidGuestReferenceException(Exception innerException)
+            : base(message: "Invalid guest reference error occurred.", innerException)
+        { }
     }
 }

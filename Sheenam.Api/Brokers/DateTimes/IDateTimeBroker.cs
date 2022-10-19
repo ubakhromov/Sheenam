@@ -6,8 +6,8 @@
 
 namespace Sheenam.Api.Brokers.DateTimes
 {
-    public interface IDateTimesBroker
+    public interface IDateTimeBroker
     {
-        DateTimeOffset GetCurrentDateTimeOffset();
+        DateTimeOffset GetCurrentDateTime();
     }
 }

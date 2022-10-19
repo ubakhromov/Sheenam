@@ -4,6 +4,7 @@
 // ==================================================
 
 using Microsoft.OpenApi.Models;
+using Sheenam.Api.Brokers.DateTimes;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Services.Foundations.Guests;
@@ -61,6 +62,7 @@ namespace Sheenam.Api
         {
             services.AddTransient<IStorageBroker, StorageBroker>();
             services.AddTransient<ILoggingBroker, LoggingBroker>();
+            services.AddTransient<IDateTimeBroker, DateTimeBroker>();
         }
 
         private static void AddFoundationServices(IServiceCollection services)
