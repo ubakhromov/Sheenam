@@ -138,7 +138,7 @@ namespace Sheenam.Api.Controllers
             }
         }
 
-        [HttpDelete("{postId}")]
+        [HttpDelete("{guestId}")]
         public async ValueTask<ActionResult<Guest>> DeleteGuestByIdAsync(Guid postId)
         {
             try

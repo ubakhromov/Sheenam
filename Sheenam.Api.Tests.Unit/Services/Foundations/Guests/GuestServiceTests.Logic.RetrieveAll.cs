@@ -28,7 +28,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             IQueryable<Guest> actualGuests =
                 this.guestServices.RetrieveAllGuests();
 
-            //then
+            //then 
             actualGuests.Should().BeEquivalentTo(expectedGuests);
 
             this.storageBrokerMock.Verify(broker =>
