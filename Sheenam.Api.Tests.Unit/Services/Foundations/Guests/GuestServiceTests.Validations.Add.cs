@@ -133,7 +133,6 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             ValueTask<Guest> addGuestTask =
                 this.guestServices.AddGuestAsync(invalidGuest);
 
-
             //then
             await Assert.ThrowsAsync<GuestValidationException>(() =>
                 addGuestTask.AsTask());
@@ -149,7 +148,6 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
-
         }
     }
 }
