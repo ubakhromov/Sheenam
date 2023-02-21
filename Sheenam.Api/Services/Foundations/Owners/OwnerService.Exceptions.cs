@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
 using Sheenam.Api.Models.Foundations.Owner;
 using Sheenam.Api.Models.Foundations.Owner.Exceptions;
+using System;
 using Xeptions;
 
 namespace Sheenam.Api.Services.Foundations.Owners
@@ -24,6 +25,10 @@ namespace Sheenam.Api.Services.Foundations.Owners
             catch (NullOwnerException nullOwnerException)
             {
                 throw CreateAndLogValidationException(nullOwnerException);
+            }
+            catch (InvalidOwnerException invalidOwnerException)
+            {
+                throw CreateAndLogValidationException(invalidOwnerException);
             }
         }
 
