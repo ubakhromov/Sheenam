@@ -22,7 +22,14 @@ namespace Sheenam.Api.Services.Foundations.Owners
                 (Rule: IsInvalid(owner.FirstName), Parameter: nameof(Owner.FirstName)),
                 (Rule: IsInvalid(owner.LastName), Parameter: nameof(Owner.LastName)),
                 (Rule: IsInvalid(owner.DateOfBirth), Parameter: nameof(Owner.DateOfBirth)),
-                (Rule: IsInvalid(owner.Email), Parameter: nameof(Owner.Email)));
+                (Rule: IsInvalid(owner.Email), Parameter: nameof(Owner.Email)),
+
+                (Rule: IsNotSame(
+                    firstDate: owner.UpdatedDate,
+                    secondDate: owner.CreatedDate,
+                    secondDateName: nameof(Owner.CreatedDate)),
+                Parameter: nameof(Owner.UpdatedDate))
+            );
         }
 
         private static void ValidateOwnerIsNotNull(Owner owner)
@@ -50,6 +57,15 @@ namespace Sheenam.Api.Services.Foundations.Owners
             Condition = date == default,
             Message = "Date is required"
         };
+
+        private static dynamic IsNotSame(
+           DateTimeOffset firstDate,
+           DateTimeOffset secondDate,
+           string secondDateName) => new
+           {
+               Condition = firstDate != secondDate,
+               Message = $"Date is not the same as {secondDateName}"
+           };
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
