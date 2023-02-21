@@ -3,6 +3,7 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using Microsoft.Extensions.Hosting;
 using Sheenam.Api.Brokers.DateTimes;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
@@ -22,10 +23,14 @@ namespace Sheenam.Api.Services.Foundations.Owners
         {
             this.storageBroker = storageBroker;
             this.loggingBroker = loggingBroker;
-            
         }
 
-        public async ValueTask<Owner> AddOwnerAsync(Owner owner)=>
-            await this.storageBroker.InsertOwnerAsync(owner);
+        public ValueTask<Owner> AddOwnerAsync(Owner owner) =>
+        TryCatch(async () =>
+        {
+            ValidateOwner(owner);
+
+            return await this.storageBroker.InsertOwnerAsync(owner);
+        });
     }
 }
