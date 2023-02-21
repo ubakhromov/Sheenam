@@ -10,7 +10,7 @@ using Sheenam.Api.Models.Foundations.Owner;
 
 namespace Sheenam.Api.Services.Foundations.Owners
 {
-    public class OwnerService : IOwnerService
+    public partial class OwnerService : IOwnerService
     {
         private readonly IStorageBroker storageBroker;
         private readonly ILoggingBroker loggingBroker;
