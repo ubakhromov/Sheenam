@@ -67,7 +67,7 @@ namespace Sheenam.Api
 
         private static void AddFoundationServices(IServiceCollection services)
         {
-            services.AddTransient<IGuestServices, GuestServices>();           
+            services.AddTransient<IGuestServices, GuestServices>();
         }
     }
 }
