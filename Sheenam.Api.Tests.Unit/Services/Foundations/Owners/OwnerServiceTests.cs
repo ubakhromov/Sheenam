@@ -9,7 +9,9 @@ using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Models.Foundations.Owner;
 using Sheenam.Api.Services.Foundations.Owners;
+using System.Linq.Expressions;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
 {
@@ -28,6 +30,9 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
                 storageBroker: this.storageBrokerMock.Object,
                 loggingBroker: this.loggingBrokerMock.Object);
         }
+
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
 
         private static Owner CreateRandomOwner() =>
             CreateOwnerFiller().Create();
