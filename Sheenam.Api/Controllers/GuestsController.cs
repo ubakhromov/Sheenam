@@ -3,9 +3,7 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
 using RESTFulSense.Controllers;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
