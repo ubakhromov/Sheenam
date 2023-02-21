@@ -107,5 +107,47 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnAddIfCreateAndUpdateDatesIsNotSameAndLogitAsync()
+        {
+            // given
+            int randomNumber = GetRandomNumber();
+            Owner randomOwner = CreateRandomOwner();
+            Owner invalidOwner = randomOwner;
+
+            invalidOwner.UpdatedDate =
+                invalidOwner.CreatedDate.AddDays(randomNumber);
+
+            var invalidOwnerException =
+                new InvalidOwnerException();
+
+            invalidOwnerException.AddData(
+                key: nameof(Owner.UpdatedDate),
+                values: $"Date is not the same as {nameof(Owner.CreatedDate)}");
+
+            var expectedOwnerValidationException =
+                new OwnerValidationException(invalidOwnerException);
+
+            // when
+            ValueTask<Owner> addOwnerTask =
+                this.ownerService.AddOwnerAsync(invalidOwner);
+
+            // then
+            await Assert.ThrowsAsync<OwnerValidationException>(() =>
+               addOwnerTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedOwnerValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertOwnerAsync(It.IsAny<Owner>()),
+                    Times.Never);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

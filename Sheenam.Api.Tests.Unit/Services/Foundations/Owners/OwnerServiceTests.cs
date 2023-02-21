@@ -40,6 +40,9 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
 
+        private static int GetRandomNumber() =>
+            new IntRange(min: 2, max: 10).GetValue();
+
         private static Filler<Owner> CreateOwnerFiller()
         {
             var filler = new Filler<Owner>();
