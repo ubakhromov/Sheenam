@@ -14,7 +14,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
     public partial class OwnerServiceTests
     {
         [Fact]
-        public async Task ShouldAddProfileAsync()
+        public async Task ShouldAddOwnerAsync()
         {
             // given
             Owner randomOwner = CreateRandomOwner();

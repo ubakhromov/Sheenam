@@ -25,11 +25,7 @@ namespace Sheenam.Api.Services.Foundations.Owners
             
         }
 
-        public ValueTask<Owner> AddOwnerAsync(Owner owner)
-        {
-            throw new System.NotImplementedException();
-        }
-
-
+        public async ValueTask<Owner> AddOwnerAsync(Owner owner)=>
+            await this.storageBroker.InsertOwnerAsync(owner);
     }
 }
