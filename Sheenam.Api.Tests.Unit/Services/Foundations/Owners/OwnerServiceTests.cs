@@ -4,6 +4,7 @@
 // ==================================================
 
 
+using Microsoft.Data.SqlClient;
 using Moq;
 using Sheenam.Api.Brokers.DateTimes;
 using Sheenam.Api.Brokers.Loggings;
@@ -11,6 +12,7 @@ using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Models.Foundations.Owner;
 using Sheenam.Api.Services.Foundations.Owners;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using Tynamix.ObjectFiller;
 using Xeptions;
 using Xunit;
@@ -62,6 +64,9 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
+
+        private static SqlException GetSqlException() =>
+       (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 10).GetValue();
