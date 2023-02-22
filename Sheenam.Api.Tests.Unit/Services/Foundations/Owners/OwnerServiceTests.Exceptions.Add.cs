@@ -7,6 +7,7 @@
 using EFxceptions.Models.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Moq;
 using Sheenam.Api.Models.Foundations.Owner;
@@ -114,6 +115,55 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyExceptionOnAddIfDatabaseUpdateErrorOccursAndLogItAsync()
+        {
+            // given
+            Owner someOwner = CreateRandomOwner();
+
+            var databaseUpdateException =
+                new DbUpdateException();
+
+            var failedOwnerStorageException =
+                new FailedOwnerStorageException(databaseUpdateException);
+
+            var expectedOwnerDependencyException =
+                new OwnerDependencyException(failedOwnerStorageException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Throws(databaseUpdateException);
+
+            // when
+            ValueTask<Owner> addOwnerTask =
+                this.ownerService.AddOwnerAsync(someOwner);
+
+            OwnerDependencyException actualOwnerDependencyException =
+              await Assert.ThrowsAsync<OwnerDependencyException>(
+                  addOwnerTask.AsTask);
+
+            // then
+            actualOwnerDependencyException.Should().BeEquivalentTo(
+                expectedOwnerDependencyException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedOwnerDependencyException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertOwnerAsync(It.IsAny<Owner>()),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
