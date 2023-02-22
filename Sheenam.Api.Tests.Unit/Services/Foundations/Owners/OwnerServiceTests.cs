@@ -5,6 +5,7 @@
 
 
 using Moq;
+using Sheenam.Api.Brokers.DateTimes;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Models.Foundations.Owner;
@@ -12,6 +13,7 @@ using Sheenam.Api.Services.Foundations.Owners;
 using System.Linq.Expressions;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
 {
@@ -19,36 +21,60 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
     {
         private readonly Mock<IStorageBroker> storageBrokerMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
+        private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
         private readonly IOwnerService ownerService;
 
         public OwnerServiceTests()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
+            this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
 
             this.ownerService = new OwnerService(
                 storageBroker: this.storageBrokerMock.Object,
-                loggingBroker: this.loggingBrokerMock.Object);
+                loggingBroker: this.loggingBrokerMock.Object,
+                dateTimeBroker: this.dateTimeBrokerMock.Object);
+        }
+
+        public static TheoryData MinutesBeforeOrAfter()
+        {
+            int randomNumber = GetRandomNumber();
+            int randomNegativeNumber = GetRandomNegativeNumber();
+
+            return new TheoryData<int>
+            {
+                randomNumber,
+                randomNegativeNumber
+            };
         }
 
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 
         private static Owner CreateRandomOwner() =>
-            CreateOwnerFiller().Create();
+            CreateOwnerFiller(date: GetRandomDateTimeOffset()).Create();
+
+        private static Owner CreateRandomOwner(DateTimeOffset dates) =>
+          CreateOwnerFiller(dates).Create();
 
         private static DateTimeOffset GetRandomDateTime() =>
+            new DateTimeRange(earliestDate: new DateTime()).GetValue();
+
+        private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
 
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 10).GetValue();
 
-        private static Filler<Owner> CreateOwnerFiller()
+        private static int GetRandomNegativeNumber() =>
+        -1 * new IntRange(min: 2, max: 10).GetValue();
+
+        private static Filler<Owner> CreateOwnerFiller(DateTimeOffset date)
         {
             var filler = new Filler<Owner>();
 
             filler.Setup()
-                .OnType<DateTimeOffset>().Use(GetRandomDateTime());
+                .OnType<DateTimeOffset>().Use(date);
 
             return filler;
         }

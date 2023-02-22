@@ -15,14 +15,17 @@ namespace Sheenam.Api.Services.Foundations.Owners
     {
         private readonly IStorageBroker storageBroker;
         private readonly ILoggingBroker loggingBroker;
+        private readonly IDateTimeBroker dateTimeBroker;
         
 
         public OwnerService(
            IStorageBroker storageBroker,
-           ILoggingBroker loggingBroker)
+           ILoggingBroker loggingBroker,
+           IDateTimeBroker dateTimeBroker)
         {
             this.storageBroker = storageBroker;
             this.loggingBroker = loggingBroker;
+            this.dateTimeBroker = dateTimeBroker;
         }
 
         public ValueTask<Owner> AddOwnerAsync(Owner owner) =>
