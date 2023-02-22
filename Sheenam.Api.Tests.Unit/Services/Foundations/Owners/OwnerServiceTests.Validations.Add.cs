@@ -31,6 +31,10 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             ValueTask<Owner> addOwnerTask =
                 this.ownerService.AddOwnerAsync(nullOwner);
 
+            OwnerValidationException actualProfileValidationException =
+                await Assert.ThrowsAsync<OwnerValidationException>(
+                    addOwnerTask.AsTask);
+
             // then
             await Assert.ThrowsAsync<OwnerValidationException>(() =>
                 addOwnerTask.AsTask());
@@ -40,6 +44,11 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
                       expectedOwnerValidationException))),
                           Times.Once);
 
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertOwnerAsync(nullOwner),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
@@ -80,6 +89,14 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
                 key: nameof(Owner.Email),
                 values: "Text is required");
 
+            invalidOwnerException.AddData(
+                key: nameof(Owner.CreatedDate),
+                values: "Date is required");
+
+            invalidOwnerException.AddData(
+                key: nameof(Owner.UpdatedDate),
+                values: "Date is required");
+
             var expectedOwnerValidationException =
                 new OwnerValidationException(invalidOwnerException);
 
@@ -103,7 +120,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertOwnerAsync(It.IsAny<Owner>()),
                     Times.Never);
-
+          
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
@@ -112,8 +129,9 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
         public async Task ShouldThrowValidationExceptionOnAddIfCreateAndUpdateDatesIsNotSameAndLogitAsync()
         {
             // given
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
             int randomNumber = GetRandomNumber();
-            Owner randomOwner = CreateRandomOwner();
+            Owner randomOwner = CreateRandomOwner(randomDateTime);
             Owner invalidOwner = randomOwner;
 
             invalidOwner.UpdatedDate =
@@ -129,14 +147,22 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             var expectedOwnerValidationException =
                 new OwnerValidationException(invalidOwnerException);
 
+            this.dateTimeBrokerMock.Setup(broker =>
+              broker.GetCurrentDateTime())
+                  .Returns(randomDateTime);
+
             // when
             ValueTask<Owner> addOwnerTask =
                 this.ownerService.AddOwnerAsync(invalidOwner);
 
-            // then
-            await Assert.ThrowsAsync<OwnerValidationException>(() =>
-               addOwnerTask.AsTask());
+            OwnerValidationException actualOwnerValidationException =
+                await Assert.ThrowsAsync<OwnerValidationException>(() =>
+                    addOwnerTask.AsTask());
 
+            // then
+            actualOwnerValidationException.Should().
+                BeEquivalentTo(expectedOwnerValidationException);
+            
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedOwnerValidationException))),
@@ -144,7 +170,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertOwnerAsync(It.IsAny<Owner>()),
-                    Times.Never);
+                    Times.Never);            
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
@@ -177,7 +203,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime())
-                    .Returns(randomDateTime);
+                    .Returns(randomDateTime); 
 
             // when
             ValueTask<Owner> addOwnerTask =

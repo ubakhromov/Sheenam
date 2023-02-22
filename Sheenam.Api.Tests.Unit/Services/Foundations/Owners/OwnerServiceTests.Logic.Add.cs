@@ -17,10 +17,15 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
         public async Task ShouldAddOwnerAsync()
         {
             // given
-            Owner randomOwner = CreateRandomOwner();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Owner randomOwner = CreateRandomOwner(randomDateTime);
             Owner inputOwner = randomOwner;
             Owner insertedOwner = inputOwner;
             Owner expectedOwner = insertedOwner.DeepClone();
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Returns(randomDateTime);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.InsertOwnerAsync(inputOwner))
@@ -33,10 +38,15 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             // then
             actualOwner.Should().BeEquivalentTo(expectedOwner);
 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once);
+
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertOwnerAsync(inputOwner),
                     Times.Once());
 
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }

@@ -3,17 +3,14 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
-
-using Microsoft.Extensions.Hosting;
 using Sheenam.Api.Models.Foundations.Owner;
 using Sheenam.Api.Models.Foundations.Owner.Exceptions;
-using System;
 
 namespace Sheenam.Api.Services.Foundations.Owners
 {
     public partial class OwnerService
     {
-        private static void ValidateOwner(Owner owner)
+        private void ValidateOwner(Owner owner)
         {
             ValidateOwnerIsNotNull(owner);
 
@@ -23,13 +20,16 @@ namespace Sheenam.Api.Services.Foundations.Owners
                 (Rule: IsInvalid(owner.LastName), Parameter: nameof(Owner.LastName)),
                 (Rule: IsInvalid(owner.DateOfBirth), Parameter: nameof(Owner.DateOfBirth)),
                 (Rule: IsInvalid(owner.Email), Parameter: nameof(Owner.Email)),
+                (Rule: IsInvalid(owner.CreatedDate), Parameter: nameof(Owner.CreatedDate)),
+                (Rule: IsInvalid(owner.UpdatedDate), Parameter: nameof(Owner.UpdatedDate)),
 
                 (Rule: IsNotSame(
                     firstDate: owner.UpdatedDate,
                     secondDate: owner.CreatedDate,
                     secondDateName: nameof(Owner.CreatedDate)),
-                Parameter: nameof(Owner.UpdatedDate))
-            );
+                Parameter: nameof(Owner.UpdatedDate)),
+
+                (Rule: IsNotRecent(owner.CreatedDate), Parameter: nameof(Owner.CreatedDate)));
         }
 
         private static void ValidateOwnerIsNotNull(Owner owner)
@@ -66,6 +66,23 @@ namespace Sheenam.Api.Services.Foundations.Owners
                Condition = firstDate != secondDate,
                Message = $"Date is not the same as {secondDateName}"
            };
+
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent"
+        };
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime =
+                this.dateTimeBroker.GetCurrentDateTime();
+
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+            TimeSpan oneMinute = TimeSpan.FromMinutes(1);
+
+            return timeDifference.Duration() > oneMinute;
+        }
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
