@@ -3,12 +3,10 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Hosting;
-using Sheenam.Api.Models.Foundations.Guests.Exceptions;
 using Sheenam.Api.Models.Foundations.Owner;
 using Sheenam.Api.Models.Foundations.Owner.Exceptions;
-using System;
 using Xeptions;
 
 namespace Sheenam.Api.Services.Foundations.Owners
@@ -38,6 +36,13 @@ namespace Sheenam.Api.Services.Foundations.Owners
 
                 throw CreateAndLogCriticalDependencyException(failedOwnerStorageException);
             }
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var alreadyExistOwnerException =
+                    new AlreadyExistsOwnerException(duplicateKeyException);
+
+                throw CreateAndLogDependencyValidationException(alreadyExistOwnerException);
+            }
         }
 
         private OwnerValidationException CreateAndLogValidationException(Xeption exception)
@@ -58,6 +63,16 @@ namespace Sheenam.Api.Services.Foundations.Owners
             this.loggingBroker.LogCritical(ownerDependencyException);
 
             return ownerDependencyException;
+        }
+
+        private OwnerDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
+        {
+            var ownerDependencyValidationException =
+                new OwnerDependencyValidationException(exception);
+
+            this.loggingBroker.LogError(ownerDependencyValidationException);
+
+            return ownerDependencyValidationException;
         }
     }
 }
