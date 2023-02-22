@@ -5,6 +5,7 @@
 
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Sheenam.Api.Models.Foundations.Owner;
 using Sheenam.Api.Models.Foundations.Owner.Exceptions;
 using Xeptions;
@@ -43,6 +44,13 @@ namespace Sheenam.Api.Services.Foundations.Owners
 
                 throw CreateAndLogDependencyValidationException(alreadyExistOwnerException);
             }
+            catch (DbUpdateException databaseUpdateException)
+            {
+                var failedOwnerStorageException =
+                    new FailedOwnerStorageException(databaseUpdateException);
+
+                throw CreateAndLogDependecyException(failedOwnerStorageException);
+            }
         }
 
         private OwnerValidationException CreateAndLogValidationException(Xeption exception)
@@ -73,6 +81,14 @@ namespace Sheenam.Api.Services.Foundations.Owners
             this.loggingBroker.LogError(ownerDependencyValidationException);
 
             return ownerDependencyValidationException;
+        }
+
+        private OwnerDependencyException CreateAndLogDependecyException(Xeption exception)
+        {
+            var ownerDependencyException = new OwnerDependencyException(exception);
+            this.loggingBroker.LogError(ownerDependencyException);
+
+            return ownerDependencyException;
         }
     }
 }
