@@ -59,6 +59,9 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
         private static Owner CreateRandomOwner(DateTimeOffset dates) =>
           CreateOwnerFiller(dates).Create();
 
+        private static string GetRandomMessage() =>
+            new MnemonicString(wordCount: GetRandomNumber()).GetValue();
+
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
 
