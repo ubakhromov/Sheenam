@@ -6,10 +6,10 @@
 
 using Sheenam.Api.Models.Foundations.Owner;
 
-namespace Sheenam.Api.Brokers.Storages
+namespace Sheenam.Api.Services.Foundations.Owners
 {
-    public partial interface IStorageBroker
+    public interface IOwnerService
     {
-        ValueTask<Owner> InsertOwnerAsync(Owner owner);
+        ValueTask<Owner> AddOwnerAsync(Owner owner);
     }
 }

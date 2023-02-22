@@ -4,12 +4,14 @@
 // ==================================================
 
 
-using Sheenam.Api.Models.Foundations.Owner;
+using Xeptions;
 
-namespace Sheenam.Api.Brokers.Storages
+namespace Sheenam.Api.Models.Foundations.Owner.Exceptions
 {
-    public partial interface IStorageBroker
+    public class NullOwnerException : Xeption
     {
-        ValueTask<Owner> InsertOwnerAsync(Owner owner);
+        public NullOwnerException()
+           : base(message: "Owner is null")
+        {}
     }
 }
