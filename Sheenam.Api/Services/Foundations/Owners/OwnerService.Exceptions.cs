@@ -3,6 +3,7 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Hosting;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
 using Sheenam.Api.Models.Foundations.Owner;
@@ -30,6 +31,13 @@ namespace Sheenam.Api.Services.Foundations.Owners
             {
                 throw CreateAndLogValidationException(invalidOwnerException);
             }
+            catch (SqlException sqlException)
+            {
+                var failedOwnerStorageException =
+                    new FailedOwnerStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedOwnerStorageException);
+            }
         }
 
         private OwnerValidationException CreateAndLogValidationException(Xeption exception)
@@ -40,6 +48,16 @@ namespace Sheenam.Api.Services.Foundations.Owners
             this.loggingBroker.LogError(ownerValidationException);
 
             return ownerValidationException;
+        }
+
+        private OwnerDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
+        {
+            var ownerDependencyException =
+                new OwnerDependencyException(exception);
+
+            this.loggingBroker.LogCritical(ownerDependencyException);
+
+            return ownerDependencyException;
         }
     }
 }
