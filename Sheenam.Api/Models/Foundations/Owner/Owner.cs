@@ -3,6 +3,7 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using Sheenam.Api.Models.Foundations.Guests;
 using System;
 
 namespace Sheenam.Api.Models.Foundations.Owner
