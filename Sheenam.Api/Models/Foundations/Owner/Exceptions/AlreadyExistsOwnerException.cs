@@ -4,6 +4,7 @@
 // ==================================================
 
 
+using System;
 using Xeptions;
 
 namespace Sheenam.Api.Models.Foundations.Owner.Exceptions

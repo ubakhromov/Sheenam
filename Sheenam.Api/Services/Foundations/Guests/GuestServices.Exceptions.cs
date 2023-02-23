@@ -9,6 +9,9 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Xeptions;
 
 namespace Sheenam.Api.Services.Foundations.Guests

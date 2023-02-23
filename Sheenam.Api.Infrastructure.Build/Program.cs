@@ -7,6 +7,7 @@ using ADotNet.Clients;
 using ADotNet.Models.Pipelines.GithubPipelines.DotNets;
 using ADotNet.Models.Pipelines.GithubPipelines.DotNets.Tasks;
 using ADotNet.Models.Pipelines.GithubPipelines.DotNets.Tasks.SetupDotNetTaskV1s;
+using System.Collections.Generic;
 
 var githubPipeline = new GithubPipeline
 {
@@ -43,7 +44,7 @@ var githubPipeline = new GithubPipeline
                     Name = "Seting Up .NET",
                     TargetDotNetVersion = new TargetDotNetVersion
                     {
-                        DotNetVersion = "6.0.400"
+                        DotNetVersion = "7.0.102"
                     }
                 },
 

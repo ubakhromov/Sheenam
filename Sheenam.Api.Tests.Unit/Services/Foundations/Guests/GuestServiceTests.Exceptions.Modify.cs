@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests

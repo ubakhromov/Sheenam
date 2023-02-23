@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
 using Sheenam.Api.Models.Foundations.Owner;
 using Sheenam.Api.Models.Foundations.Owner.Exceptions;
+using System;
+using System.Threading.Tasks;
 using Xeptions;
 
 namespace Sheenam.Api.Services.Foundations.Owners
