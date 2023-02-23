@@ -8,6 +8,9 @@ using RESTFulSense.Controllers;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
 using Sheenam.Api.Services.Foundations.Guests;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Sheenam.Api.Controllers
 {
@@ -137,12 +140,12 @@ namespace Sheenam.Api.Controllers
         }
 
         [HttpDelete("{guestId}")]
-        public async ValueTask<ActionResult<Guest>> DeleteGuestByIdAsync(Guid postId)
+        public async ValueTask<ActionResult<Guest>> DeleteGuestByIdAsync(Guid guestId)
         {
             try
             {
                 Guest deletedGuest =
-                    await this.guestService.RemoveGuestByIdAsync(postId);
+                    await this.guestService.RemoveGuestByIdAsync(guestId);
 
                 return Ok(deletedGuest);
             }

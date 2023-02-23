@@ -3,6 +3,8 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System;
+
 namespace Sheenam.Api.Models.Foundations.Owner
 {
     public class Owner

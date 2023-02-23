@@ -4,6 +4,7 @@
 // ==================================================
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using RESTFulSense.Controllers;
 
 namespace Sheenam.Api.Controllers

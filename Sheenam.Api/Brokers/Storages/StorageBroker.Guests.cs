@@ -5,7 +5,11 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Configuration;
 using Sheenam.Api.Models.Foundations.Guests;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Sheenam.Api.Brokers.Storages
 {
@@ -16,7 +20,7 @@ namespace Sheenam.Api.Brokers.Storages
             this.configuration = configuration;
         }
 
-        public DbSet<Guest> Guests {get;set;}
+        public DbSet<Guest> Guests { get; set; }
 
         public async ValueTask<Guest> InsertGuestAsync(Guest guest)
         {
@@ -32,7 +36,7 @@ namespace Sheenam.Api.Brokers.Storages
 
         public IQueryable<Guest> SelectAllGuests()
         {
-            using var broker = 
+            using var broker =
                 new StorageBroker(
                     this.configuration);
             return broker.Guests;

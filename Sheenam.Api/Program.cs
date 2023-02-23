@@ -3,8 +3,8 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
-using System;
-using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace Sheenam.Api
 {

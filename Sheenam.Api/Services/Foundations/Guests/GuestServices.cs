@@ -3,12 +3,13 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
-using Microsoft.Extensions.Hosting;
 using Sheenam.Api.Brokers.DateTimes;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Models.Foundations.Guests;
-using Sheenam.Api.Models.Foundations.Guests.Exceptions;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Sheenam.Api.Services.Foundations.Guests
 {
@@ -51,11 +52,11 @@ namespace Sheenam.Api.Services.Foundations.Guests
 
                 ValidateStorageGuest(maybeGuest, guestId);
 
-                 return maybeGuest;
+                return maybeGuest;
             });
 
         public ValueTask<Guest> ModifyGuestAsync(Guest guest) =>
-            TryCatch(async() =>
+            TryCatch(async () =>
             {
 
                 ValidateGuestOnModify(guest);
@@ -63,7 +64,7 @@ namespace Sheenam.Api.Services.Foundations.Guests
                 Guest storageGuest =
                 await this.storageBroker.
                     SelectGuestsByIdAsync(guest.Id);
-                
+
                 ValidateStorageGuest(storageGuest, guest.Id);
 
                 return await this.storageBroker.

@@ -4,6 +4,9 @@
 // ==================================================
 
 
+using Microsoft.Extensions.Logging;
+using System;
+
 namespace Sheenam.Api.Brokers.Loggings
 {
     public class LoggingBroker : ILoggingBroker
