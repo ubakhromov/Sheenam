@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Configuration;
 using Sheenam.Api.Models.Foundations.Guests;
+using Sheenam.Api.Models.Foundations.Owner;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,17 +23,8 @@ namespace Sheenam.Api.Brokers.Storages
 
         public DbSet<Guest> Guests { get; set; }
 
-        public async ValueTask<Guest> InsertGuestAsync(Guest guest)
-        {
-            using var broker = new StorageBroker(this.configuration);
-
-            EntityEntry<Guest> guestEntityEntry =
-                await broker.Guests.AddAsync(guest);
-
-            await broker.SaveChangesAsync();
-
-            return guestEntityEntry.Entity;
-        }
+        public async ValueTask<Guest> InsertGuestAsync(Guest guest) =>
+           await InsertAsync(guest);
 
         public IQueryable<Guest> SelectAllGuests()
         {

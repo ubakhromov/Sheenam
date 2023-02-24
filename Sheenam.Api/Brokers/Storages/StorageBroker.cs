@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Sheenam.Api.Brokers.Storages
 {
@@ -21,6 +22,15 @@ namespace Sheenam.Api.Brokers.Storages
             this.configuration = configuration;
             this.Database.Migrate();
             this.logger = logger;
+        }
+
+        private async ValueTask<T> InsertAsync<T>(T @object)
+        {
+            var broker = new StorageBroker(this.configuration);
+            broker.Entry(@object).State = EntityState.Added;
+            await broker.SaveChangesAsync();
+
+            return @object;
         }
 
         private IQueryable<T> SelectAll<T>() where T : class => this.Set<T>();
