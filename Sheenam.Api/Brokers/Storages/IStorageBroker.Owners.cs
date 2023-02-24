@@ -5,6 +5,7 @@
 
 
 using Sheenam.Api.Models.Foundations.Owner;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Sheenam.Api.Brokers.Storages
@@ -12,5 +13,7 @@ namespace Sheenam.Api.Brokers.Storages
     public partial interface IStorageBroker
     {
         ValueTask<Owner> InsertOwnerAsync(Owner owner);
+
+        IQueryable<Owner> SelectAllOwners();
     }
 }

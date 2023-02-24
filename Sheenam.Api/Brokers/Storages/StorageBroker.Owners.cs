@@ -6,7 +6,9 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Hosting;
 using Sheenam.Api.Models.Foundations.Owner;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Sheenam.Api.Brokers.Storages
@@ -27,5 +29,8 @@ namespace Sheenam.Api.Brokers.Storages
 
             return ownerEntityEntry.Entity;
         }
+
+        public IQueryable<Owner> SelectAllOwners() =>
+           SelectAll<Owner>();
     }
 }
