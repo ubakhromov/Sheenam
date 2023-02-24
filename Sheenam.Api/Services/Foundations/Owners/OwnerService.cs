@@ -6,6 +6,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
 using Sheenam.Api.Brokers.DateTimes;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
@@ -40,7 +41,8 @@ namespace Sheenam.Api.Services.Foundations.Owners
 
         public IQueryable<Owner> RetrieveAllOwners()
         {
-            throw new NotImplementedException();
+            IQueryable<Owner> storageOwners = this.storageBroker.SelectAllOwners();
+            return storageOwners;
         }
     }
 }
