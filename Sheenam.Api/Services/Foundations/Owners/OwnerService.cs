@@ -3,6 +3,8 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Sheenam.Api.Brokers.DateTimes;
 using Sheenam.Api.Brokers.Loggings;
@@ -35,5 +37,10 @@ namespace Sheenam.Api.Services.Foundations.Owners
 
             return await this.storageBroker.InsertOwnerAsync(owner);
         });
+
+        public IQueryable<Owner> RetrieveAllOwners()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

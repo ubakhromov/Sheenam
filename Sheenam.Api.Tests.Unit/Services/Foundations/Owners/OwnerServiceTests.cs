@@ -5,9 +5,11 @@
 
 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Hosting;
 using Moq;
 using Sheenam.Api.Brokers.DateTimes;
 using Sheenam.Api.Brokers.Loggings;
@@ -58,7 +60,14 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             CreateOwnerFiller(date: GetRandomDateTimeOffset()).Create();
 
         private static Owner CreateRandomOwner(DateTimeOffset dates) =>
-          CreateOwnerFiller(dates).Create();
+        CreateOwnerFiller(dates).Create();
+
+        private static IQueryable<Owner> CreateRandomOwners()
+        {
+            return CreateOwnerFiller(date: GetRandomDateTimeOffset())
+                .Create(count: GetRandomNumber())
+                    .AsQueryable();
+        }
 
         private static string GetRandomMessage() =>
             new MnemonicString(wordCount: GetRandomNumber()).GetValue();
@@ -70,13 +79,13 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
 
         private static SqlException GetSqlException() =>
-       (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 10).GetValue();
 
         private static int GetRandomNegativeNumber() =>
-        -1 * new IntRange(min: 2, max: 10).GetValue();
+            -1 * new IntRange(min: 2, max: 10).GetValue();
 
         private static Filler<Owner> CreateOwnerFiller(DateTimeOffset date)
         {
