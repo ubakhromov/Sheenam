@@ -4,8 +4,8 @@
 // ==================================================
 
 
-using Microsoft.Extensions.Logging;
 using System;
+using Microsoft.Extensions.Logging;
 
 namespace Sheenam.Api.Brokers.Loggings
 {
@@ -15,8 +15,8 @@ namespace Sheenam.Api.Brokers.Loggings
 
         public LoggingBroker(ILogger<LoggingBroker> logger) =>
             this.logger = logger;
-        
-        public void LogError(Exception exception)=>        
+
+        public void LogError(Exception exception) =>
             this.logger.LogError(exception, exception.Message);
 
         public void LogCritical(Exception exception) =>
@@ -28,7 +28,7 @@ namespace Sheenam.Api.Brokers.Loggings
         public void LogWarning(string message) =>
             this.logger.LogWarning(message);
 
-        public void LogInformation(string message)=>
+        public void LogInformation(string message) =>
             this.logger.LogInformation(message);
 
         public void LogDebug(string message) =>

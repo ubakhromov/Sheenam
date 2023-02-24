@@ -12,6 +12,6 @@ namespace Sheenam.Api.Models.Foundations.Guests.Exceptions
     {
         public LockedGuestException(Exception innerException)
             : base(message: "Locked guest record excpetion, please try again later", innerException)
-        {}
+        { }
     }
 }

@@ -21,5 +21,5 @@ namespace Sheenam.Api.Models.Foundations.Guests
         public DateTimeOffset UpdatedDate { get; set; }
     }
 
-    
+
 }

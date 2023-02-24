@@ -51,7 +51,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             };
         }
 
-        private static Guest CreateRandomGuest()=>
+        private static Guest CreateRandomGuest() =>
             CreateGuestFiller(date: GetRandomDateTimeOffset()).Create();
 
         private static IQueryable<Guest> CreatedRandomGuests()
@@ -82,8 +82,8 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
         private static T GetInvalidEnum<T>()
         {
             int randomNumber = GetRandomNumber();
-            
-            while(Enum.IsDefined(typeof(T), randomNumber) is true)
+
+            while (Enum.IsDefined(typeof(T), randomNumber) is true)
             {
                 randomNumber = GetRandomNumber();
             }

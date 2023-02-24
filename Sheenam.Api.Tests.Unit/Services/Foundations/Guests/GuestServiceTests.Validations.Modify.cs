@@ -3,13 +3,12 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System;
+using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
-using System;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
@@ -23,7 +22,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             Guest nullGuest = null;
             var nullGuestException = new NullGuestException();
 
-            var expectedGuestValidationException = 
+            var expectedGuestValidationException =
                 new GuestValidationException(nullGuestException);
 
             //when
@@ -39,7 +38,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
                     expectedGuestValidationException))),
                         Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectGuestsByIdAsync(It.IsAny<Guid>()),
                     Times.Never);
 
@@ -49,7 +48,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
-            this.storageBrokerMock.VerifyNoOtherCalls();            
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -74,7 +73,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
                 key: nameof(Guest.FirstName),
                 values: "Text is required");
 
-           
+
             invalidGuestException.AddData(
                 key: nameof(Guest.LastName),
                 values: "Text is required");
@@ -105,7 +104,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
                     }
                 );
 
-            var expectedGuestValidationException = 
+            var expectedGuestValidationException =
                 new GuestValidationException(invalidGuestException);
 
             this.dateTimeBrokerMock.Setup(broker =>
@@ -114,8 +113,8 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
 
             //when
             ValueTask<Guest> modifyGuestTask =
-                this.guestServices.ModifyGuestAsync(invalidGuest);   
-            
+                this.guestServices.ModifyGuestAsync(invalidGuest);
+
             GuestValidationException actualGuestValidationException =
                 await Assert.ThrowsAsync<GuestValidationException>(() =>
                     modifyGuestTask.AsTask());
@@ -174,7 +173,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             actualGuestValidationException.Should().BeEquivalentTo(
                 expectedGuestValidationException);
 
-            this.dateTimeBrokerMock.Verify(broker => 
+            this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(),
                     Times.Once);
 
@@ -202,14 +201,14 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             Guest inputGuest = randomGuest;
             inputGuest.UpdatedDate = dateTime.AddMinutes(minutes);
 
-            var invalidGuestException = 
+            var invalidGuestException =
                 new InvalidGuestException();
 
             invalidGuestException.AddData(
                 key: nameof(Guest.UpdatedDate),
                 values: "Date is not recent");
 
-            var expectedGuestValidationException = 
+            var expectedGuestValidationException =
                 new GuestValidationException(invalidGuestException);
 
             this.dateTimeBrokerMock.Setup(broker =>
@@ -264,7 +263,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             var notFoundGuestException =
                 new NotFoundGuestException(nonExistGuest.Id);
 
-            var expectedGuestValidationException = 
+            var expectedGuestValidationException =
                 new GuestValidationException(notFoundGuestException);
 
             this.dateTimeBrokerMock.Setup(broker =>

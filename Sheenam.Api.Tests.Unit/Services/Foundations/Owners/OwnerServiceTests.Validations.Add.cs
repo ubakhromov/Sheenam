@@ -3,13 +3,12 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System;
+using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.Extensions.Hosting;
 using Moq;
 using Sheenam.Api.Models.Foundations.Owner;
 using Sheenam.Api.Models.Foundations.Owner.Exceptions;
-using System;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
@@ -121,7 +120,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertOwnerAsync(It.IsAny<Owner>()),
                     Times.Never);
-          
+
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
@@ -163,7 +162,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             // then
             actualOwnerValidationException.Should().
                 BeEquivalentTo(expectedOwnerValidationException);
-            
+
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedOwnerValidationException))),
@@ -171,7 +170,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertOwnerAsync(It.IsAny<Owner>()),
-                    Times.Never);            
+                    Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
@@ -204,7 +203,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTime())
-                    .Returns(randomDateTime); 
+                    .Returns(randomDateTime);
 
             // when
             ValueTask<Owner> addOwnerTask =

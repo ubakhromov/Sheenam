@@ -4,6 +4,9 @@
 // ==================================================
 
 
+using System;
+using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using Microsoft.Data.SqlClient;
 using Moq;
 using Sheenam.Api.Brokers.DateTimes;
@@ -11,9 +14,6 @@ using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Models.Foundations.Owner;
 using Sheenam.Api.Services.Foundations.Owners;
-using System;
-using System.Linq.Expressions;
-using System.Runtime.Serialization;
 using Tynamix.ObjectFiller;
 using Xeptions;
 using Xunit;

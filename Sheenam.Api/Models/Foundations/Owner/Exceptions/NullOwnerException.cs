@@ -12,6 +12,6 @@ namespace Sheenam.Api.Models.Foundations.Owner.Exceptions
     {
         public NullOwnerException()
            : base(message: "Owner is null")
-        {}
+        { }
     }
 }

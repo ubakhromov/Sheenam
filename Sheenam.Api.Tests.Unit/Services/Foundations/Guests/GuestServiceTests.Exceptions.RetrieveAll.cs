@@ -4,10 +4,10 @@
 // ==================================================
 
 
+using System;
 using Microsoft.Data.SqlClient;
 using Moq;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
-using System;
 using Xunit;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
@@ -20,10 +20,10 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             //given
             SqlException sqlException = GetSqlError();
 
-            var failedGuestStorageException = 
+            var failedGuestStorageException =
                 new FailedGuestStorageException(sqlException);
 
-            var expectedGuestDependencyException = 
+            var expectedGuestDependencyException =
                 new GuestDependencyException(failedGuestStorageException);
 
             this.storageBrokerMock.Setup(broker =>
@@ -57,10 +57,10 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             string exceptionMessage = GetRandomString();
             var serviceException = new Exception(exceptionMessage);
 
-            var failedGuestServiceException = 
+            var failedGuestServiceException =
                 new FailedGuestServiceException(serviceException);
 
-            var expectedGuestServiceException = 
+            var expectedGuestServiceException =
                 new GuestServiceException(failedGuestServiceException);
 
             this.storageBrokerMock.Setup(broker =>

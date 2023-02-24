@@ -3,13 +3,12 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System;
+using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.Identity.Client;
 using Moq;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
-using System;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
@@ -22,14 +21,14 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             //given
             var invalidGuestId = Guid.Empty;
 
-            var invalidGuestException = 
+            var invalidGuestException =
                 new InvalidGuestException();
 
             invalidGuestException.AddData(
                 key: nameof(Guest.Id),
                 values: "Id is required");
 
-            var expectedGuestValidationException = 
+            var expectedGuestValidationException =
                 new GuestValidationException(invalidGuestException);
 
             //when
@@ -54,7 +53,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
                     Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
-            this.storageBrokerMock.VerifyNoOtherCalls();            
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -64,18 +63,18 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             Guid someGuestId = Guid.NewGuid();
             Guest noGuest = null;
 
-            var notFoundGuestException = 
+            var notFoundGuestException =
                 new NotFoundGuestException(someGuestId);
 
-            var expectedGuestValidationException = 
+            var expectedGuestValidationException =
                 new GuestValidationException(notFoundGuestException);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectGuestsByIdAsync(It.IsAny<Guid>()))
                     .ReturnsAsync(noGuest);
-            
+
             //when
-            ValueTask<Guest> retrieveGuestByIdTask = 
+            ValueTask<Guest> retrieveGuestByIdTask =
                 this.guestServices.RetrieveGuestByIdAsync(someGuestId);
 
             GuestValidationException actualGuestValidationException =

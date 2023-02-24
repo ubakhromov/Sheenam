@@ -4,14 +4,14 @@
 // ==================================================
 
 
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Xeptions;
 
 namespace Sheenam.Api.Services.Foundations.Guests
@@ -35,7 +35,7 @@ namespace Sheenam.Api.Services.Foundations.Guests
             {
                 throw CreateAndLogValidationException(invalidGuestException);
             }
-            catch(NotFoundGuestException notFoundGuestException)
+            catch (NotFoundGuestException notFoundGuestException)
             {
                 throw CreateAndLogValidationException(notFoundGuestException);
             }
@@ -69,7 +69,7 @@ namespace Sheenam.Api.Services.Foundations.Guests
             }
             catch (DbUpdateException dbUpdateException)
             {
-                var failedGuestStorageException = 
+                var failedGuestStorageException =
                     new FailedGuestStorageException(dbUpdateException);
 
                 throw CreateAndLogDependencyException(failedGuestStorageException);
@@ -80,7 +80,7 @@ namespace Sheenam.Api.Services.Foundations.Guests
                     new FailedGuestServiceException(exception);
 
                 throw CreateAndLogServiceException(failedGuestServiceException);
-            }            
+            }
         }
 
         private IQueryable<Guest> TryCatch(ReturningGuestsFunction returningGuestsFunction)
@@ -100,11 +100,11 @@ namespace Sheenam.Api.Services.Foundations.Guests
             {
                 var failedGuestServiceException =
                     new FailedGuestServiceException(serviceException);
-                
+
                 throw CreateAndLogServiceException(failedGuestServiceException);
             }
         }
-        
+
         private GuestValidationException CreateAndLogValidationException(Xeption exception)
         {
             var guestValidationException =
