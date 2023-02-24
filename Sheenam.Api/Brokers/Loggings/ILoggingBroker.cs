@@ -12,10 +12,10 @@ namespace Sheenam.Api.Brokers.Loggings
     public interface ILoggingBroker
     {
         void LogError(Exception exception);
-        void LogCritical (Exception exception);
+        void LogCritical(Exception exception);
         void LogTrace(string message);
         void LogWarning(string message);
-        void LogDebug (string message);
+        void LogDebug(string message);
         void LogInformation(string message);
     }
 }

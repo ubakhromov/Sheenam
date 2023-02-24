@@ -13,6 +13,6 @@ namespace Sheenam.Api.Models.Foundations.Owner.Exceptions
     {
         public AlreadyExistsOwnerException(Exception innerException)
            : base(message: "Owner already exist", innerException)
-        {}
+        { }
     }
 }

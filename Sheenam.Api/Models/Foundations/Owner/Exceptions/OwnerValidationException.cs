@@ -13,6 +13,6 @@ namespace Sheenam.Api.Models.Foundations.Owner.Exceptions
         public OwnerValidationException(Xeption innerException)
         : base(message: "Owner validation error occured, fix the errors and try again",
               innerException)
-        {}
+        { }
     }
 }

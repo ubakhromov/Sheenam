@@ -48,7 +48,7 @@ namespace Sheenam.Api.Services.Foundations.Guests
                 Parameter: nameof(Guest.UpdatedDate)),
 
                 (Rule: IsNotRecent(guest.UpdatedDate),
-                    Parameter: nameof(Guest.UpdatedDate)));            
+                    Parameter: nameof(Guest.UpdatedDate)));
         }
 
         private void ValidateGuestId(Guid guestId) =>
@@ -62,7 +62,7 @@ namespace Sheenam.Api.Services.Foundations.Guests
             }
         }
 
-        private void ValidateGuestNotNull(Guest guest )
+        private void ValidateGuestNotNull(Guest guest)
         {
             if (guest is null)
             {
@@ -90,10 +90,10 @@ namespace Sheenam.Api.Services.Foundations.Guests
 
         private static dynamic IsInvalid(GenderType gender) => new
         {
-            Condition= Enum.IsDefined(gender) is false,
-            Message = "Value is invalid" 
+            Condition = Enum.IsDefined(gender) is false,
+            Message = "Value is invalid"
         };
-        
+
         private static dynamic IsSame(
             DateTimeOffset firstDate,
             DateTimeOffset secondDate,
@@ -124,7 +124,7 @@ namespace Sheenam.Api.Services.Foundations.Guests
         {
             var invalidGuestException = new InvalidGuestException();
 
-            foreach((dynamic rule, string parameter) in validations)
+            foreach ((dynamic rule, string parameter) in validations)
             {
                 if (rule.Condition)
                 {
@@ -135,6 +135,6 @@ namespace Sheenam.Api.Services.Foundations.Guests
             }
 
             invalidGuestException.ThrowIfContainsErrors();
-        }               
+        }
     }
 }

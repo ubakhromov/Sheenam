@@ -35,7 +35,7 @@ namespace Sheenam.Api.Services.Foundations.Guests
             {
                 throw CreateAndLogValidationException(invalidGuestException);
             }
-            catch(NotFoundGuestException notFoundGuestException)
+            catch (NotFoundGuestException notFoundGuestException)
             {
                 throw CreateAndLogValidationException(notFoundGuestException);
             }
@@ -69,7 +69,7 @@ namespace Sheenam.Api.Services.Foundations.Guests
             }
             catch (DbUpdateException dbUpdateException)
             {
-                var failedGuestStorageException = 
+                var failedGuestStorageException =
                     new FailedGuestStorageException(dbUpdateException);
 
                 throw CreateAndLogDependencyException(failedGuestStorageException);
@@ -80,7 +80,7 @@ namespace Sheenam.Api.Services.Foundations.Guests
                     new FailedGuestServiceException(exception);
 
                 throw CreateAndLogServiceException(failedGuestServiceException);
-            }            
+            }
         }
 
         private IQueryable<Guest> TryCatch(ReturningGuestsFunction returningGuestsFunction)
@@ -100,11 +100,11 @@ namespace Sheenam.Api.Services.Foundations.Guests
             {
                 var failedGuestServiceException =
                     new FailedGuestServiceException(serviceException);
-                
+
                 throw CreateAndLogServiceException(failedGuestServiceException);
             }
         }
-        
+
         private GuestValidationException CreateAndLogValidationException(Xeption exception)
         {
             var guestValidationException =

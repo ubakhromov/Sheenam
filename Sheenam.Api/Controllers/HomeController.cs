@@ -29,7 +29,7 @@ namespace Sheenam.Api.Controllers
             logger.LogError("I am logging error");
             logger.LogCritical("I am logging critical");
 
-            return Ok("Here we go!"); 
+            return Ok("Here we go!");
         }
     }
 }

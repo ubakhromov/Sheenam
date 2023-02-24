@@ -3,10 +3,6 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
-using System;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.Serialization;
 using Microsoft.Data.SqlClient;
 using Moq;
 using Sheenam.Api.Brokers.DateTimes;
@@ -14,6 +10,10 @@ using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Services.Foundations.Guests;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using Tynamix.ObjectFiller;
 using Xeptions;
 using Xunit;
@@ -51,7 +51,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             };
         }
 
-        private static Guest CreateRandomGuest()=>
+        private static Guest CreateRandomGuest() =>
             CreateGuestFiller(date: GetRandomDateTimeOffset()).Create();
 
         private static IQueryable<Guest> CreatedRandomGuests()
@@ -82,8 +82,8 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
         private static T GetInvalidEnum<T>()
         {
             int randomNumber = GetRandomNumber();
-            
-            while(Enum.IsDefined(typeof(T), randomNumber) is true)
+
+            while (Enum.IsDefined(typeof(T), randomNumber) is true)
             {
                 randomNumber = GetRandomNumber();
             }

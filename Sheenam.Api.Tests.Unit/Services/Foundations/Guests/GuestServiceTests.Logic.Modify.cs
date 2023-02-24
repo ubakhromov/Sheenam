@@ -22,21 +22,21 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             int randomNumber = GetRandomNumber();
             int randomDays = randomNumber;
 
-            DateTimeOffset randomDate = 
+            DateTimeOffset randomDate =
                 GetRandomDateTimeOffset();
 
-            Guest randomGuest = 
+            Guest randomGuest =
                 CreateRandomGuest();
 
             Guest inputGuest = randomGuest;
 
-            Guest afterUpdateStorageGuest = 
+            Guest afterUpdateStorageGuest =
                 inputGuest;
 
-            Guest expectedGuest = 
+            Guest expectedGuest =
                 afterUpdateStorageGuest;
 
-            Guest beforeUpdateStorageGuest = 
+            Guest beforeUpdateStorageGuest =
                 randomGuest.DeepClone();
 
             inputGuest.UpdatedDate = randomDate;
@@ -55,7 +55,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
                     .ReturnsAsync(afterUpdateStorageGuest);
 
             //when
-            Guest actualGuest = 
+            Guest actualGuest =
                 await this.guestServices.ModifyGuestAsync(inputGuest);
 
             //then

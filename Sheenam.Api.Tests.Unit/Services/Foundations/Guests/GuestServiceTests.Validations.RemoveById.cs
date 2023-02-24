@@ -21,7 +21,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             //given
             Guid invalidGuestId = Guid.Empty;
 
-            var invalidGuestException = 
+            var invalidGuestException =
                 new InvalidGuestException();
 
             invalidGuestException.AddData(
@@ -68,13 +68,13 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             Guid inputGuestId = Guid.NewGuid();
             Guest noGuest = null;
 
-            var notFoundGuestException = 
+            var notFoundGuestException =
                 new NotFoundGuestException(inputGuestId);
 
-            var expectedGuestValidationException = 
+            var expectedGuestValidationException =
                 new GuestValidationException(notFoundGuestException);
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectGuestsByIdAsync(It.IsAny<Guid>()))
                     .ReturnsAsync(noGuest);
 

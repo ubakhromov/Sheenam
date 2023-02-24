@@ -98,7 +98,7 @@ namespace Sheenam.Api.Services.Foundations.Owners
                         value: rule.Message);
                 }
             }
-             
+
             invalidOwnerException.ThrowIfContainsErrors();
         }
     }

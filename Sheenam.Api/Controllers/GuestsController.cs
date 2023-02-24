@@ -86,20 +86,20 @@ namespace Sheenam.Api.Controllers
 
                 return Ok(guest);
             }
-            catch(GuestValidationException guestValidationException)
+            catch (GuestValidationException guestValidationException)
                 when (guestValidationException.InnerException is NotFoundGuestException)
             {
                 return NotFound(guestValidationException.InnerException);
             }
-            catch(GuestValidationException guestValidationException)
+            catch (GuestValidationException guestValidationException)
             {
                 return BadRequest(guestValidationException.InnerException);
             }
-            catch(GuestDependencyException guestDependencyException)
+            catch (GuestDependencyException guestDependencyException)
             {
                 return InternalServerError(guestDependencyException);
             }
-            catch(GuestServiceException guestServiceException)
+            catch (GuestServiceException guestServiceException)
             {
                 return InternalServerError(guestServiceException);
             }

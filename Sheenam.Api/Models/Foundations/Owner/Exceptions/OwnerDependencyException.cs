@@ -12,6 +12,6 @@ namespace Sheenam.Api.Models.Foundations.Owner.Exceptions
         public OwnerDependencyException(Xeption innerException)
             : base(message: "Owner dependency error occured, contact support",
                   innerException)
-        {}
+        { }
     }
 }

@@ -17,7 +17,7 @@ namespace Sheenam.Api.Brokers.Storages
 
         public async ValueTask<Owner> InsertOwnerAsync(Owner owner)
         {
-            using var broker = 
+            using var broker =
                 new StorageBroker(this.configuration);
 
             EntityEntry<Owner> ownerEntityEntry =

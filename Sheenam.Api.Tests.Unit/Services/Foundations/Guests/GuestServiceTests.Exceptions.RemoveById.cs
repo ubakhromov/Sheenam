@@ -24,7 +24,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             Guid someGuestId = Guid.NewGuid();
             SqlException sqlException = GetSqlError();
 
-            var failedGuestStorageException = 
+            var failedGuestStorageException =
                 new FailedGuestStorageException(sqlException);
 
             var expectedGuestDependencyException =

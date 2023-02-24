@@ -3,14 +3,13 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
-using System;
-using System.Drawing;
-using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Moq;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
@@ -44,7 +43,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
                 broker.InsertGuestAsync(someGuest),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(broker=>
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedGuestDependencyException))),
                         Times.Once);
@@ -60,10 +59,10 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             Guest someGuest = CreateRandomGuest();
             string someMessage = GetRandomString();
 
-            DuplicateKeyException duplicateKeyException = 
+            DuplicateKeyException duplicateKeyException =
                 new DuplicateKeyException(someMessage);
 
-            var alreadyExistGuestException = 
+            var alreadyExistGuestException =
                 new AlreadyExistGuestException(duplicateKeyException);
 
             var excpectedGuestDependencyValidationException =
@@ -102,10 +101,10 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests
             Guest someGuest = CreateRandomGuest();
             var serviceException = new Exception();
 
-            var failedGuestServiceException = 
+            var failedGuestServiceException =
                 new FailedGuestServiceException(serviceException);
 
-            var expectedGuestServiceException = 
+            var expectedGuestServiceException =
                 new GuestServiceException(failedGuestServiceException);
 
             this.storageBrokerMock.Setup(broker =>
