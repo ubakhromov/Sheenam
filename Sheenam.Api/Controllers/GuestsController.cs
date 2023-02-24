@@ -3,14 +3,14 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
 using Sheenam.Api.Services.Foundations.Guests;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sheenam.Api.Controllers
 {

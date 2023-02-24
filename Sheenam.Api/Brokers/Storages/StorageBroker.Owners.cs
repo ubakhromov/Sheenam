@@ -4,12 +4,10 @@
 // ==================================================
 
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.Extensions.Hosting;
-using Sheenam.Api.Models.Foundations.Owner;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Sheenam.Api.Models.Foundations.Owner;
 
 namespace Sheenam.Api.Brokers.Storages
 {
@@ -17,7 +15,7 @@ namespace Sheenam.Api.Brokers.Storages
     {
         public DbSet<Owner> Owners { get; set; }
 
-        public async ValueTask<Owner> InsertPostAsync(Owner owner) =>
+        public async ValueTask<Owner> InsertOwnerAsync(Owner owner) =>
             await InsertAsync(owner);
 
         public IQueryable<Owner> SelectAllOwners() =>

@@ -3,11 +3,11 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Sheenam.Api.Models.Foundations.Guests;
-using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests

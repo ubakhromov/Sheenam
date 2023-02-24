@@ -4,10 +4,10 @@
 // ==================================================
 
 
+using System;
 using Microsoft.Data.SqlClient;
 using Moq;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
-using System;
 using Xunit;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Guests

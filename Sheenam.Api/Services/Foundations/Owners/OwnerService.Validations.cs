@@ -3,9 +3,9 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System;
 using Sheenam.Api.Models.Foundations.Owner;
 using Sheenam.Api.Models.Foundations.Owner.Exceptions;
-using System;
 
 namespace Sheenam.Api.Services.Foundations.Owners
 {

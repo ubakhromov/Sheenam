@@ -3,13 +3,13 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System;
+using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Sheenam.Api.Models.Foundations.Owner;
 using Sheenam.Api.Models.Foundations.Owner.Exceptions;
-using System;
-using System.Threading.Tasks;
 using Xeptions;
 
 namespace Sheenam.Api.Services.Foundations.Owners
