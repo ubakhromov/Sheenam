@@ -11,6 +11,7 @@ using Sheenam.Api.Brokers.DateTimes;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Models.Foundations.Owner;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Sheenam.Api.Services.Foundations.Owners
 {
@@ -39,10 +40,11 @@ namespace Sheenam.Api.Services.Foundations.Owners
             return await this.storageBroker.InsertOwnerAsync(owner);
         });
 
-        public IQueryable<Owner> RetrieveAllOwners()
+        public IQueryable<Owner> RetrieveAllOwners() =>
+        TryCatch(() =>
         {
-            IQueryable<Owner> storageOwners = this.storageBroker.SelectAllOwners();
-            return storageOwners;
-        }
+           return this.storageBroker.SelectAllOwners();
+
+        });
     }
 }
