@@ -3,11 +3,15 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
 using Sheenam.Api.Brokers.DateTimes;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Models.Foundations.Owner;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Sheenam.Api.Services.Foundations.Owners
 {
@@ -34,6 +38,13 @@ namespace Sheenam.Api.Services.Foundations.Owners
             ValidateOwner(owner);
 
             return await this.storageBroker.InsertOwnerAsync(owner);
+        });
+
+        public IQueryable<Owner> RetrieveAllOwners() =>
+        TryCatch(() =>
+        {
+           return this.storageBroker.SelectAllOwners();
+
         });
     }
 }

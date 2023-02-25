@@ -4,10 +4,12 @@
 // ==================================================
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Sheenam.Api.Models.Foundations.Owner;
 using Sheenam.Api.Models.Foundations.Owner.Exceptions;
 using Xeptions;
@@ -17,6 +19,8 @@ namespace Sheenam.Api.Services.Foundations.Owners
     public partial class OwnerService
     {
         private delegate ValueTask<Owner> ReturningOwnerFunction();
+        private delegate IQueryable<Owner> ReturningOwnersFunction();
+
 
         private async ValueTask<Owner> TryCatch(ReturningOwnerFunction returningOwnerFunction)
         {
@@ -52,6 +56,28 @@ namespace Sheenam.Api.Services.Foundations.Owners
                     new FailedOwnerStorageException(databaseUpdateException);
 
                 throw CreateAndLogDependecyException(failedOwnerStorageException);
+            }
+            catch (Exception exception)
+            {
+                var failedOwnerServiceException =
+                    new FailedOwnerServiceException(exception);
+
+                throw CreateAndLogServiceException(failedOwnerServiceException);
+            }
+        }
+
+        private IQueryable<Owner> TryCatch(ReturningOwnersFunction returningOwnersFunction)
+        {
+            try
+            {
+                return returningOwnersFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedOwnerStorageException =
+                     new FailedOwnerStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedOwnerStorageException);
             }
             catch (Exception exception)
             {
