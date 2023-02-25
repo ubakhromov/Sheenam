@@ -18,6 +18,5 @@ namespace Sheenam.Api
                 .ConfigureWebHostDefaults(webBuilder =>
                 webBuilder.UseStartup<Startup>());
         }
-
     }
 }

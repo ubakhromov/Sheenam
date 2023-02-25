@@ -3,6 +3,7 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Sheenam.Api.Brokers.DateTimes;
@@ -40,7 +41,21 @@ namespace Sheenam.Api.Services.Foundations.Owners
         public IQueryable<Owner> RetrieveAllOwners() =>
         TryCatch(() =>
         {
-           return this.storageBroker.SelectAllOwners();
+            return this.storageBroker.SelectAllOwners();
+        });
+
+        public ValueTask<Owner> RetrieveOwnerByIdAsync(Guid ownerId) =>
+        TryCatch(async () =>
+
+        {
+            ValidateOwnerById(ownerId);
+
+            Owner maybeOwner = await this.storageBroker
+                .SelectOwnerByIdAsync(ownerId);
+
+            ValiateStorageOwner(maybeOwner, ownerId);
+
+            return maybeOwner;
         });
     }
 }

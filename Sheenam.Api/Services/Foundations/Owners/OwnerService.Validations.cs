@@ -4,6 +4,7 @@
 // ==================================================
 
 using System;
+using Microsoft.Extensions.Hosting;
 using Sheenam.Api.Models.Foundations.Owner;
 using Sheenam.Api.Models.Foundations.Owner.Exceptions;
 
@@ -38,6 +39,17 @@ namespace Sheenam.Api.Services.Foundations.Owners
             if (owner is null)
             {
                 throw new NullOwnerException();
+            }
+        }
+
+        public void ValidateOwnerById(Guid ownerId) =>
+           Validate((Rule: IsInvalid(ownerId), Parameter: nameof(Owner.Id)));
+
+        public void ValiateStorageOwner(Owner maybeOwner, Guid ownerId)
+        {
+            if (maybeOwner is null)
+            {
+                throw new NotFoundOwnerException(ownerId);
             }
         }
 
