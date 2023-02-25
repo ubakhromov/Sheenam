@@ -34,20 +34,23 @@ namespace Sheenam.Api.Services.Foundations.Owners
         TryCatch(async () =>
         {
             ValidateOwner(owner);
-
             return await this.storageBroker.InsertOwnerAsync(owner);
         });
 
         public IQueryable<Owner> RetrieveAllOwners() =>
         TryCatch(() =>
         {
-           return this.storageBroker.SelectAllOwners();
+            return this.storageBroker.SelectAllOwners();
         });
 
-        public async ValueTask<Owner> RetrieveOwnerByIdAsync(Guid ownerId)
+        public ValueTask<Owner> RetrieveOwnerByIdAsync(Guid ownerId) =>
+        TryCatch(async () =>
+
         {
+            ValidateOwnerById(ownerId);
+
             return await this.storageBroker
                 .SelectOwnerByIdAsync(ownerId);
-        }
+        });
     }
 }
