@@ -4,6 +4,7 @@
 // ==================================================
 
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -20,5 +21,8 @@ namespace Sheenam.Api.Brokers.Storages
 
         public IQueryable<Owner> SelectAllOwners() =>
            SelectAll<Owner>();
+
+        public async ValueTask<Owner> SelectOwnerByIdAsync(Guid ownerId) =>
+            await SelectAsync<Owner>(ownerId);
     }
 }
