@@ -79,6 +79,13 @@ namespace Sheenam.Api.Services.Foundations.Owners
 
                 throw CreateAndLogCriticalDependencyException(failedOwnerStorageException);
             }
+            catch (Exception exception)
+            {
+                var failedOwnerServiceException =
+                    new FailedOwnerServiceException(exception);
+
+                throw CreateAndLogServiceException(failedOwnerServiceException);
+            }
         }
 
         private OwnerValidationException CreateAndLogValidationException(Xeption exception)
