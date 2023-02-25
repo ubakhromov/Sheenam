@@ -3,6 +3,7 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -60,6 +61,34 @@ namespace Sheenam.Api.Controllers
                     this.ownerService.RetrieveAllOwners();
 
                 return Ok(retrievedOwners);
+            }
+            catch (OwnerDependencyException ownerDependencyException)
+            {
+                return InternalServerError(ownerDependencyException);
+            }
+            catch (OwnerServiceException ownerServiceException)
+            {
+                return InternalServerError(ownerServiceException);
+            }
+        }
+
+        [HttpGet("{ownerId}")]
+        public async ValueTask<ActionResult<Owner>> GetOwnerByIdAsync(Guid ownerId)
+        {
+            try
+            {
+                Owner owner = await this.ownerService.RetrieveOwnerByIdAsync(ownerId);
+
+                return Ok(owner);
+            }
+            catch (OwnerValidationException ownerValidationException)
+                when (ownerValidationException.InnerException is NotFoundOwnerException)
+            {
+                return NotFound(ownerValidationException.InnerException);
+            }
+            catch (OwnerValidationException ownerValidationException)
+            {
+                return BadRequest(ownerValidationException.InnerException);
             }
             catch (OwnerDependencyException ownerDependencyException)
             {
