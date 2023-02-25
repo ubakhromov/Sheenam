@@ -13,6 +13,7 @@ using Sheenam.Api.Brokers.DateTimes;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Services.Foundations.Guests;
+using Sheenam.Api.Services.Foundations.Owners;
 
 namespace Sheenam.Api
 {
@@ -72,6 +73,7 @@ namespace Sheenam.Api
 
         private static void AddFoundationServices(IServiceCollection services)
         {
+            services.AddTransient<IOwnerService, OwnerService>();
             services.AddTransient<IGuestServices, GuestServices>();
         }
     }

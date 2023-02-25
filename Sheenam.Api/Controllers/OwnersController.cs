@@ -3,6 +3,7 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
@@ -39,6 +40,26 @@ namespace Sheenam.Api.Controllers
                when (ownerDependencyValidationException.InnerException is AlreadyExistsOwnerException)
             {
                 return Conflict(ownerDependencyValidationException.InnerException);
+            }
+            catch (OwnerDependencyException ownerDependencyException)
+            {
+                return InternalServerError(ownerDependencyException);
+            }
+            catch (OwnerServiceException ownerServiceException)
+            {
+                return InternalServerError(ownerServiceException);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult<IQueryable<Owner>> GetAllOwners()
+        {
+            try
+            {
+                IQueryable<Owner> retrievedOwners =
+                    this.ownerService.RetrieveAllOwners();
+
+                return Ok(retrievedOwners);
             }
             catch (OwnerDependencyException ownerDependencyException)
             {
