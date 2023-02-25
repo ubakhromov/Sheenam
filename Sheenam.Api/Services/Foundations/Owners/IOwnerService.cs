@@ -4,6 +4,7 @@
 // ==================================================
 
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Sheenam.Api.Models.Foundations.Owner;
@@ -14,5 +15,6 @@ namespace Sheenam.Api.Services.Foundations.Owners
     {
         ValueTask<Owner> AddOwnerAsync(Owner owner);
         IQueryable<Owner> RetrieveAllOwners();
+        ValueTask<Owner> RetrieveOwnerByIdAsync(Guid ownerId);
     }
 }

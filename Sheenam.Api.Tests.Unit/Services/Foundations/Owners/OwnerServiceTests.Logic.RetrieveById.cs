@@ -1,0 +1,51 @@
+﻿//===================================================
+// Copyright (c) Coalition of Good-Hearted Engineers 
+// Free To Use To Find Comfort and Peace
+// ==================================================
+
+using FluentAssertions;
+using Force.DeepCloner;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Hosting;
+using Moq;
+using Sheenam.Api.Models.Foundations.Owner;
+using Sheenam.Api.Models.Foundations.Owner.Exceptions;
+using System;
+using System.Threading.Tasks;
+using Xunit;
+
+namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
+{
+    public partial class OwnerServiceTests
+    {
+        [Fact]
+        public async Task ShouldRetrieveOwnerByIdAsync()
+        {
+            // given
+            Guid randomOwnerId = Guid.NewGuid();
+            Guid inputOwnerId = randomOwnerId;
+            Owner randomOwner = CreateRandomOwner();
+            Owner storageOwner = randomOwner;
+            Owner expectedOwner = storageOwner.DeepClone();
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectOwnerByIdAsync(inputOwnerId))
+                    .ReturnsAsync(storageOwner);
+
+            // when
+            Owner actualOwner =
+                await this.ownerService.RetrieveOwnerByIdAsync(inputOwnerId);
+
+            // then
+            actualOwner.Should().BeEquivalentTo(expectedOwner);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectOwnerByIdAsync(inputOwnerId),
+                    Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+    }
+}
