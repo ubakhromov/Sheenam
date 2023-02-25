@@ -44,7 +44,10 @@ namespace Sheenam.Api.Services.Foundations.Owners
            return this.storageBroker.SelectAllOwners();
         });
 
-        public ValueTask<Owner> RetrieveOwnerByIdAsync(Guid ownerId) => 
-            throw new NotImplementedException();
+        public async ValueTask<Owner> RetrieveOwnerByIdAsync(Guid ownerId)
+        {
+            return await this.storageBroker
+                .SelectOwnerByIdAsync(ownerId);
+        }
     }
 }
