@@ -43,6 +43,10 @@ namespace Sheenam.Api.Services.Foundations.Owners
 
                 throw CreateAndLogCriticalDependencyException(failedOwnerStorageException);
             }
+            catch (NotFoundOwnerException notFoundOwnerException)
+            {
+                throw CreateAndLogValidationException(notFoundOwnerException);
+            }
             catch (DuplicateKeyException duplicateKeyException)
             {
                 var alreadyExistOwnerException =

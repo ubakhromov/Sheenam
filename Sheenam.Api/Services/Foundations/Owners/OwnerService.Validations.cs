@@ -45,6 +45,14 @@ namespace Sheenam.Api.Services.Foundations.Owners
         public void ValidateOwnerById(Guid ownerId) =>
            Validate((Rule: IsInvalid(ownerId), Parameter: nameof(Owner.Id)));
 
+        public void ValiateStorageOwner(Owner maybeOwner, Guid ownerId)
+        {
+            if (maybeOwner is null)
+            {
+                throw new NotFoundOwnerException(ownerId);
+            }
+        }
+
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == Guid.Empty,

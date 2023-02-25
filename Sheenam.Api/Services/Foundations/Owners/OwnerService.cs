@@ -34,6 +34,7 @@ namespace Sheenam.Api.Services.Foundations.Owners
         TryCatch(async () =>
         {
             ValidateOwner(owner);
+
             return await this.storageBroker.InsertOwnerAsync(owner);
         });
 
@@ -49,8 +50,12 @@ namespace Sheenam.Api.Services.Foundations.Owners
         {
             ValidateOwnerById(ownerId);
 
-            return await this.storageBroker
+            Owner maybeOwner = await this.storageBroker
                 .SelectOwnerByIdAsync(ownerId);
+
+            ValiateStorageOwner(maybeOwner, ownerId);
+
+            return maybeOwner;
         });
     }
 }
