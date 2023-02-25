@@ -56,5 +56,47 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowNotFoundExceptionOnRetrieveByIdIfOwnerIsNotFoundAndLogItAsync()
+        {
+            //given
+            Guid someOwnerId = Guid.NewGuid();
+            Owner noOwner = null;
+
+            var notFoundOwnerException =
+                new NotFoundOwnerException(someOwnerId);
+
+            var expectedOwnerValidationException =
+                new OwnerValidationException(notFoundOwnerException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectOwnerByIdAsync(It.IsAny<Guid>()))
+                    .ReturnsAsync(noOwner);
+
+            //when
+            ValueTask<Owner> retrieveOwnerByIdTask =
+                this.ownerService.RetrieveOwnerByIdAsync(someOwnerId);
+
+            OwnerValidationException actualOwnerValidationException =
+                await Assert.ThrowsAsync<OwnerValidationException>(
+                    retrieveOwnerByIdTask.AsTask);
+
+            // then
+            actualOwnerValidationException.Should().BeEquivalentTo(expectedOwnerValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectOwnerByIdAsync(It.IsAny<Guid>()),
+                    Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedOwnerValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
