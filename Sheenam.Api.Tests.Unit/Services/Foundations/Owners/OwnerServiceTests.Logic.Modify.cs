@@ -4,38 +4,77 @@
 // ==================================================
 
 using FluentAssertions;
+using Force.DeepCloner;
+using Microsoft.Extensions.Hosting;
 using Moq;
 using Sheenam.Api.Models.Foundations.Owner;
+using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
 {
     public partial class OwnerServiceTests
-    {cffsdfs
+    {
         [Fact]
-        public void ShouldRetrieveOwners()
+        public async Task ShouldModifyOwnerAsync()
         {
             // given
-            IQueryable<Owner> randomOwners = CreateRandomOwners();
-            IQueryable<Owner> storageOwners = randomOwners;
-            IQueryable<Owner> expectedOwners = storageOwners;
+            DateTimeOffset randomDate =
+                GetRandomDateTimeOffset();
+
+            Owner randomOwner =
+                CreateRandomOwner(randomDate);
+
+            Owner inputOwner =
+                randomOwner;
+
+            inputOwner.UpdatedDate =
+                randomDate.AddMinutes(1);
+            Owner storageOwner =
+                inputOwner;
+            Owner updatedOwner =
+                inputOwner;
+
+            Owner expectedOwner =
+                updatedOwner.DeepClone();
+
+            Guid inputOwnerId =
+                inputOwner.Id;
+
+          
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectAllOwners())
-                    .Returns(storageOwners);
+                broker.SelectOwnerByIdAsync(
+                    inputOwnerId))
+                        .ReturnsAsync(storageOwner);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.UpdateOwnerAsync(
+                    inputOwner))
+                        .ReturnsAsync(updatedOwner);
 
             // when
-            IQueryable<Owner> actualOwners =
-                this.ownerService.RetrieveAllOwners();
+            Owner actualOwner =
+                await this.ownerService.
+                    ModifyOwnerAsync(inputOwner);
 
             // then
-            actualOwners.Should().BeEquivalentTo(expectedOwners);
+            actualOwner.Should().BeEquivalentTo(
+                expectedOwner);
 
+       
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectAllOwners(),
+                broker.SelectOwnerByIdAsync(inputOwnerId),
                     Times.Once);
 
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdateOwnerAsync(inputOwner),
+                    Times.Once);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
