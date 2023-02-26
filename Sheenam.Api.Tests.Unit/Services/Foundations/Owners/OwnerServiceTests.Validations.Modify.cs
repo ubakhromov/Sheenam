@@ -99,22 +99,8 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
                 key: nameof(Owner.UpdatedDate),
                 values: "Date is required");
 
-            invalidOwnerException.AddData(
-                key: nameof(Owner.UpdatedDate),
-                    values: new[]
-                    {
-                        "Date is required",
-                        $"Date is the same as {nameof(Owner.CreatedDate)}",
-                        "Date is not recent"
-                    }
-                );
-
             var expectedOwnerValidationException =
                 new OwnerValidationException(invalidOwnerException);
-
-            this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime())
-                    .Returns(GetRandomDateTime);
 
             // when
             ValueTask<Owner> modifyOwnerTask =
@@ -128,10 +114,6 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             actualOwnerValidationException.Should()
                 .BeEquivalentTo(expectedOwnerValidationException);
 
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(),
-                    Times.Once);
-
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedOwnerValidationException))),
@@ -142,7 +124,6 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
                     Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }

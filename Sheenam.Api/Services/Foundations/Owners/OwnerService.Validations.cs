@@ -57,6 +57,15 @@ namespace Sheenam.Api.Services.Foundations.Owners
         private void ValidateOwnerOnModify(Owner owner)
         {
             ValidateOwnerIsNotNull(owner);
+
+            Validate(
+                (Rule: IsInvalid(owner.Id), Parameter: nameof(Owner.Id)),
+                (Rule: IsInvalid(owner.FirstName), Parameter: nameof(Owner.FirstName)),
+                (Rule: IsInvalid(owner.LastName), Parameter: nameof(Owner.LastName)),
+                (Rule: IsInvalid(owner.DateOfBirth), Parameter: nameof(Owner.DateOfBirth)),
+                (Rule: IsInvalid(owner.Email), Parameter: nameof(Owner.Email)),
+                (Rule: IsInvalid(owner.CreatedDate), Parameter: nameof(Owner.CreatedDate)),
+                (Rule: IsInvalid(owner.UpdatedDate), Parameter: nameof(Owner.UpdatedDate)));
         }
 
         private static dynamic IsInvalid(Guid id) => new
