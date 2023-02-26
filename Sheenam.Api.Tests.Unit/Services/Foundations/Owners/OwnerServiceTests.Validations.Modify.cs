@@ -126,5 +126,55 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotSameAsCreatedDateAndLogItAsync()
+        {
+            // given
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            Owner randomOwner = CreateRandomOwner(randomDateTime);
+            Owner invalidOwner = randomOwner;
+            var invalidOwnerException = new InvalidOwnerException();
+
+            invalidOwnerException.AddData(
+                key: nameof(Owner.UpdatedDate),
+                values: $"Date is the same as {nameof(Owner.CreatedDate)}");
+
+            var expectedOwnerValidationException =
+                new OwnerValidationException(invalidOwnerException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Returns(randomDateTime);
+
+            // when
+            ValueTask<Owner> modifyProfileTask =
+                this.ownerService.ModifyOwnerAsync(invalidOwner);
+
+            OwnerValidationException actualOwnerValidationException =
+                await Assert.ThrowsAsync<OwnerValidationException>(
+                    modifyProfileTask.AsTask);
+
+            // then
+            actualOwnerValidationException.Should()
+                .BeEquivalentTo(expectedOwnerValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedOwnerValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectOwnerByIdAsync(invalidOwner.Id),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
