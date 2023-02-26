@@ -254,5 +254,60 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfProfileDoesNotExistAndLogItAsync()
+        {
+            // given
+            int randomNegativeMinutes = GetRandomNegativeNumber();
+            DateTimeOffset dateTime = GetRandomDateTimeOffset();
+            Owner randomOwner = CreateRandomOwner(dateTime);
+            Owner nonExistOwner = randomOwner;
+            nonExistOwner.CreatedDate = dateTime.AddMinutes(randomNegativeMinutes);
+            Owner nullOwner = null;
+
+            var notFoundOwnerException =
+                new NotFoundOwnerException(nonExistOwner.Id);
+
+            var expectedOwnerValidationException =
+                new OwnerValidationException(notFoundOwnerException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Returns(dateTime);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectOwnerByIdAsync(nonExistOwner.Id))
+                    .ReturnsAsync(nullOwner);
+
+            // when 
+            ValueTask<Owner> modifyOwnerTask =
+                this.ownerService.ModifyOwnerAsync(nonExistOwner);
+
+            OwnerValidationException actualOwnerValidationException =
+                await Assert.ThrowsAsync<OwnerValidationException>(
+                    modifyOwnerTask.AsTask);
+
+            // then
+            actualOwnerValidationException.Should()
+                .BeEquivalentTo(expectedOwnerValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectOwnerByIdAsync(nonExistOwner.Id),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedOwnerValidationException))),
+                        Times.Once);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
     }
 }
