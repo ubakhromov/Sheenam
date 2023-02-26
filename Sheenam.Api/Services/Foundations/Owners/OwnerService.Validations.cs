@@ -67,13 +67,14 @@ namespace Sheenam.Api.Services.Foundations.Owners
                 (Rule: IsInvalid(owner.Email), Parameter: nameof(Owner.Email)),
                 (Rule: IsInvalid(owner.CreatedDate), Parameter: nameof(Owner.CreatedDate)),
                 (Rule: IsInvalid(owner.UpdatedDate), Parameter: nameof(Owner.UpdatedDate)),
-                (Rule: IsNotRecent(owner.UpdatedDate), Parameter: nameof(Owner.UpdatedDate)),
 
                 (Rule: IsSame(
                     firstDate: owner.UpdatedDate,
                     secondDate: owner.CreatedDate,
                     secondDateName: nameof(Owner.CreatedDate)),
-                Parameter: nameof(Owner.UpdatedDate)));
+                Parameter: nameof(Owner.UpdatedDate)),
+
+                (Rule: IsNotRecent(owner.UpdatedDate), Parameter: nameof(Owner.UpdatedDate)));
         }
 
         private static dynamic IsInvalid(Guid id) => new

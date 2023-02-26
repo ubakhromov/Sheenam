@@ -44,7 +44,9 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             Guid inputOwnerId =
                 inputOwner.Id;
 
-          
+            this.dateTimeBrokerMock.Setup(broker =>
+                  broker.GetCurrentDateTime())
+                      .Returns(randomDate);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectOwnerByIdAsync(
@@ -65,7 +67,10 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             actualOwner.Should().BeEquivalentTo(
                 expectedOwner);
 
-       
+            this.dateTimeBrokerMock.Verify(broker =>
+                     broker.GetCurrentDateTime(),
+                         Times.Once);
+
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectOwnerByIdAsync(inputOwnerId),
                     Times.Once);

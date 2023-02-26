@@ -94,10 +94,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             invalidOwnerException.AddData(
                 key: nameof(Owner.CreatedDate),
                 values: "Date is required");
-
-            invalidOwnerException.AddData(
-                key: nameof(Owner.UpdatedDate),
-                values: "Date is required");
+           
 
             invalidOwnerException.AddData(
                 key: nameof(Owner.UpdatedDate),
@@ -308,6 +305,5 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
-
     }
 }
