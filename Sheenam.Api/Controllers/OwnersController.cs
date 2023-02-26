@@ -99,5 +99,39 @@ namespace Sheenam.Api.Controllers
                 return InternalServerError(ownerServiceException);
             }
         }
+
+        [HttpPut]
+        public async ValueTask<ActionResult<Owner>> PutOwnerAsync(Owner owner)
+        {
+            try
+            {
+                Owner modifiedOwner =
+                    await this.ownerService.ModifyOwnerAsync(owner);
+
+                return Ok(modifiedOwner);
+            }
+            catch (OwnerValidationException ownerValidationException)
+                when (ownerValidationException.InnerException is NotFoundOwnerException)
+            {
+                return NotFound(ownerValidationException.InnerException);
+            }
+            catch (OwnerValidationException ownerValidationException)
+            {
+                return BadRequest(ownerValidationException.InnerException);
+            }
+            catch (OwnerDependencyValidationException ownerDependencyValidationException)
+                when (ownerDependencyValidationException.InnerException is AlreadyExistsOwnerException)
+            {
+                return Conflict(ownerDependencyValidationException.InnerException);
+            }
+            catch (OwnerDependencyException ownerDependencyException)
+            {
+                return InternalServerError(ownerDependencyException);
+            }
+            catch (OwnerServiceException ownerServiceException)
+            {
+                return InternalServerError(ownerServiceException);
+            }
+        }
     }
 }
