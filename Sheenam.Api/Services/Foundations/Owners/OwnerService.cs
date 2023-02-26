@@ -57,5 +57,8 @@ namespace Sheenam.Api.Services.Foundations.Owners
 
             return maybeOwner;
         });
+
+        public ValueTask<Owner> ModifyOwnerAsync(Owner owner) =>
+            throw new NotImplementedException();
     }
 }
