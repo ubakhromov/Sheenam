@@ -7,6 +7,7 @@ using System;
 using Microsoft.Extensions.Hosting;
 using Sheenam.Api.Models.Foundations.Owner;
 using Sheenam.Api.Models.Foundations.Owner.Exceptions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Sheenam.Api.Services.Foundations.Owners
 {
@@ -51,6 +52,11 @@ namespace Sheenam.Api.Services.Foundations.Owners
             {
                 throw new NotFoundOwnerException(ownerId);
             }
+        }
+
+        private void ValidateOwnerOnModify(Owner owner)
+        {
+            ValidateOwnerIsNotNull(owner);
         }
 
         private static dynamic IsInvalid(Guid id) => new
