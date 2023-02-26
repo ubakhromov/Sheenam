@@ -4,9 +4,11 @@
 // ==================================================
 
 using System;
+using System.Data;
 using Microsoft.Extensions.Hosting;
 using Sheenam.Api.Models.Foundations.Owner;
 using Sheenam.Api.Models.Foundations.Owner.Exceptions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Sheenam.Api.Services.Foundations.Owners
 {
@@ -53,6 +55,28 @@ namespace Sheenam.Api.Services.Foundations.Owners
             }
         }
 
+        private void ValidateOwnerOnModify(Owner owner)
+        {
+            ValidateOwnerIsNotNull(owner);
+
+            Validate(
+                (Rule: IsInvalid(owner.Id), Parameter: nameof(Owner.Id)),
+                (Rule: IsInvalid(owner.FirstName), Parameter: nameof(Owner.FirstName)),
+                (Rule: IsInvalid(owner.LastName), Parameter: nameof(Owner.LastName)),
+                (Rule: IsInvalid(owner.DateOfBirth), Parameter: nameof(Owner.DateOfBirth)),
+                (Rule: IsInvalid(owner.Email), Parameter: nameof(Owner.Email)),
+                (Rule: IsInvalid(owner.CreatedDate), Parameter: nameof(Owner.CreatedDate)),
+                (Rule: IsInvalid(owner.UpdatedDate), Parameter: nameof(Owner.UpdatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: owner.UpdatedDate,
+                    secondDate: owner.CreatedDate,
+                    secondDateName: nameof(Owner.CreatedDate)),
+                Parameter: nameof(Owner.UpdatedDate)),
+
+                (Rule: IsNotRecent(owner.UpdatedDate), Parameter: nameof(Owner.UpdatedDate)));
+        }
+
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == Guid.Empty,
@@ -85,6 +109,15 @@ namespace Sheenam.Api.Services.Foundations.Owners
             Condition = IsDateNotRecent(date),
             Message = "Date is not recent"
         };
+
+        private static dynamic IsSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate == secondDate,
+                Message = $"Date is the same as {secondDateName}"
+            };
 
         private bool IsDateNotRecent(DateTimeOffset date)
         {

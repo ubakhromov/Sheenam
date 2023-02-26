@@ -16,5 +16,6 @@ namespace Sheenam.Api.Services.Foundations.Owners
         ValueTask<Owner> AddOwnerAsync(Owner owner);
         IQueryable<Owner> RetrieveAllOwners();
         ValueTask<Owner> RetrieveOwnerByIdAsync(Guid ownerId);
+        ValueTask<Owner> ModifyOwnerAsync(Owner owner);
     }
 }

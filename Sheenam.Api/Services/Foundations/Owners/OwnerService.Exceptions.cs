@@ -10,6 +10,7 @@ using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using Sheenam.Api.Models.Foundations.Guests.Exceptions;
 using Sheenam.Api.Models.Foundations.Owner;
 using Sheenam.Api.Models.Foundations.Owner.Exceptions;
 using Xeptions;
@@ -53,6 +54,13 @@ namespace Sheenam.Api.Services.Foundations.Owners
                     new AlreadyExistsOwnerException(duplicateKeyException);
 
                 throw CreateAndLogDependencyValidationException(alreadyExistOwnerException);
+            }
+            catch (DbUpdateConcurrencyException databaseUpdateConcurrencyException)
+            {
+                var lockedOwnerException =
+                    new LockedOwnerException(databaseUpdateConcurrencyException);
+
+                throw CreateAndLogDependencyValidationException(lockedOwnerException);
             }
             catch (DbUpdateException databaseUpdateException)
             {

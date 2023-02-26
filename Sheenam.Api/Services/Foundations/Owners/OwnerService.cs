@@ -57,5 +57,19 @@ namespace Sheenam.Api.Services.Foundations.Owners
 
             return maybeOwner;
         });
+
+        public ValueTask<Owner> ModifyOwnerAsync(Owner owner) =>
+        TryCatch(async () =>
+        {
+            ValidateOwnerOnModify(owner);
+
+            var maybeOwner =
+               await this.storageBroker.SelectOwnerByIdAsync(owner.Id);
+
+            ValiateStorageOwner(maybeOwner, owner.Id);
+
+            return
+                await this.storageBroker.UpdateOwnerAsync(owner);
+        });
     }
 }

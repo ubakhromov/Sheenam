@@ -69,6 +69,17 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
                     .AsQueryable();
         }
 
+        private static Owner CreateRandomModifyOwner(DateTimeOffset dates)
+        {
+            int randomDaysInPast = GetRandomNegativeNumber();
+            Owner randomOwner = CreateRandomOwner(dates);
+
+            randomOwner.CreatedDate =
+                randomOwner.CreatedDate.AddDays(randomDaysInPast);
+
+            return randomOwner;
+        }
+
         private static string GetRandomMessage() =>
             new MnemonicString(wordCount: GetRandomNumber()).GetValue();
 
