@@ -4,13 +4,13 @@
 // ==================================================
 
 using Moq;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Threading.Tasks;
 using System;
 using Xunit;
 using Sheenam.Api.Models.Foundations.Owner;
 using Sheenam.Api.Models.Foundations.Owner.Exceptions;
 using FluentAssertions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
 {
@@ -99,8 +99,22 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
                 key: nameof(Owner.UpdatedDate),
                 values: "Date is required");
 
+            invalidOwnerException.AddData(
+                key: nameof(Owner.UpdatedDate),
+                    values: new[]
+                    {
+                        "Date is required",
+                        $"Date is the same as {nameof(Owner.CreatedDate)}",
+                        "Date is not recent"
+                    }
+                );
+
             var expectedOwnerValidationException =
                 new OwnerValidationException(invalidOwnerException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Returns(GetRandomDateTime);
 
             // when
             ValueTask<Owner> modifyOwnerTask =
@@ -114,6 +128,10 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             actualOwnerValidationException.Should()
                 .BeEquivalentTo(expectedOwnerValidationException);
 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once);
+
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedOwnerValidationException))),
@@ -124,6 +142,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
                     Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
@@ -176,5 +195,64 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(MinutesBeforeOrAfter))]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(int minutes)
+        {
+            // given
+            DateTimeOffset dateTime = GetRandomDateTimeOffset();
+            Owner randomOwner = CreateRandomOwner(dateTime);
+            Owner inputOwner = randomOwner;
+            inputOwner.UpdatedDate = dateTime.AddMinutes(minutes);
+
+            var invalidOwnerException =
+                new InvalidOwnerException();
+
+            invalidOwnerException.AddData(
+                key: nameof(Owner.UpdatedDate),
+                values: "Date is not recent");
+
+            var expectedOwnerValidatonException =
+                new OwnerValidationException(invalidOwnerException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Returns(dateTime);
+
+            // when
+            ValueTask<Owner> modifyOwnerTask =
+                this.ownerService.ModifyOwnerAsync(inputOwner);
+
+            OwnerValidationException actualOwnerValidationException =
+                await Assert.ThrowsAsync<OwnerValidationException>(
+                    modifyOwnerTask.AsTask);
+
+            // then
+            actualOwnerValidationException.Should()
+                .BeEquivalentTo(expectedOwnerValidatonException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedOwnerValidatonException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectOwnerByIdAsync(It.IsAny<Guid>()),
+                    Times.Never);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdateOwnerAsync(It.IsAny<Owner>()),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
     }
 }
