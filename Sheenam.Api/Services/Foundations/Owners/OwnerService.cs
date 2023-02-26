@@ -61,7 +61,7 @@ namespace Sheenam.Api.Services.Foundations.Owners
         public ValueTask<Owner> ModifyOwnerAsync(Owner owner) =>
         TryCatch(async () =>
         {
-            ValidateOwnerOnModify(owner);        
+            ValidateOwnerOnModify(owner);
 
             var maybeOwner =
                await this.storageBroker.SelectOwnerByIdAsync(owner.Id);
