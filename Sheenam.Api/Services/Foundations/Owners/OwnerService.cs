@@ -71,5 +71,8 @@ namespace Sheenam.Api.Services.Foundations.Owners
             return
                 await this.storageBroker.UpdateOwnerAsync(owner);
         });
+
+        public ValueTask<Owner> RemoveOwnerByIdAsync(Guid ownerId) =>
+            throw new NotImplementedException();
     }
 }
