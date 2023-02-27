@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using RESTFulSense.Controllers;
 using Sheenam.Api.Models.Foundations.Owner;
 using Sheenam.Api.Models.Foundations.Owner.Exceptions;
@@ -123,6 +124,44 @@ namespace Sheenam.Api.Controllers
                 when (ownerDependencyValidationException.InnerException is AlreadyExistsOwnerException)
             {
                 return Conflict(ownerDependencyValidationException.InnerException);
+            }
+            catch (OwnerDependencyException ownerDependencyException)
+            {
+                return InternalServerError(ownerDependencyException);
+            }
+            catch (OwnerServiceException ownerServiceException)
+            {
+                return InternalServerError(ownerServiceException);
+            }
+        }
+
+        [HttpDelete("{ownerId}")]
+        public async ValueTask<ActionResult<Owner>> DeleteOwnerByIdAsync(Guid ownerId)
+        {
+            try
+            {
+                Owner deletedOwner =
+                    await this.ownerService.RemoveOwnerByIdAsync(ownerId);
+
+                return Ok(deletedOwner);
+            }
+            catch (OwnerValidationException ownerValidationException)
+                when (ownerValidationException.InnerException is NotFoundOwnerException)
+            {
+                return NotFound(ownerValidationException.InnerException);
+            }
+            catch (OwnerValidationException ownerValidationException)
+            {
+                return BadRequest(ownerValidationException.InnerException);
+            }
+            catch (OwnerDependencyValidationException ownerDependencyValidationException)
+                when (ownerDependencyValidationException.InnerException is LockedOwnerException)
+            {
+                return Locked(ownerDependencyValidationException.InnerException);
+            }
+            catch (OwnerDependencyValidationException ownerDependencyValidationException)
+            {
+                return BadRequest(ownerDependencyValidationException);
             }
             catch (OwnerDependencyException ownerDependencyException)
             {
