@@ -80,6 +80,8 @@ namespace Sheenam.Api.Services.Foundations.Owners
             Owner someOwner =
                  await this.storageBroker.SelectOwnerByIdAsync(ownerId);
 
+            ValiateStorageOwner(someOwner, ownerId);
+
             return await this.storageBroker.DeleteOwnerAsync(someOwner);
         });
     }
