@@ -17,5 +17,6 @@ namespace Sheenam.Api.Brokers.Storages
         IQueryable<Owner> SelectAllOwners();
         ValueTask<Owner> SelectOwnerByIdAsync(Guid ownerId);
         ValueTask<Owner> UpdateOwnerAsync(Owner owner);
+        ValueTask<Owner> DeleteOwnerAsync(Owner owner);
     }
 }
