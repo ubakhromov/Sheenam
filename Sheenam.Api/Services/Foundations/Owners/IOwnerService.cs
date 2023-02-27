@@ -17,5 +17,6 @@ namespace Sheenam.Api.Services.Foundations.Owners
         IQueryable<Owner> RetrieveAllOwners();
         ValueTask<Owner> RetrieveOwnerByIdAsync(Guid ownerId);
         ValueTask<Owner> ModifyOwnerAsync(Owner owner);
+        ValueTask<Owner> RemoveOwnerByIdAsync(Guid ownerId);
     }
 }
