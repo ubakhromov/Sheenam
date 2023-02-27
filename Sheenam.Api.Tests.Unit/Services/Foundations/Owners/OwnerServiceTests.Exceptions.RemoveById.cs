@@ -108,5 +108,48 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRemoveIfExceptionOccursAndLogItAsync()
+        {
+            // given
+            Guid someOwnerId = Guid.NewGuid();
+            var serviceException = new Exception();
+
+            var failedOwnerServiceException =
+                new FailedOwnerServiceException(serviceException);
+
+            var expectedOwnerServiceException =
+                new OwnerServiceException(failedOwnerServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectOwnerByIdAsync(It.IsAny<Guid>()))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<Owner> removeOwnerByIdTask =
+                this.ownerService.RemoveOwnerByIdAsync(someOwnerId);
+
+            OwnerServiceException actualOwnerServiceException =
+                await Assert.ThrowsAsync<OwnerServiceException>(
+                    removeOwnerByIdTask.AsTask);
+
+            // then
+            actualOwnerServiceException.Should().BeEquivalentTo(
+                expectedOwnerServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectOwnerByIdAsync(It.IsAny<Guid>()),
+                        Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedOwnerServiceException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
