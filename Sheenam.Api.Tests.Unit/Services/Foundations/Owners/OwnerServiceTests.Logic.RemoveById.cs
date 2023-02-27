@@ -5,14 +5,11 @@
 
 using FluentAssertions;
 using Force.DeepCloner;
-using Microsoft.Extensions.Hosting;
 using Moq;
 using Sheenam.Api.Models.Foundations.Owner;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
 {
@@ -46,7 +43,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             actualOwner.Should().BeEquivalentTo(expectedOwner);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectGuestsByIdAsync(inputOwnerId),
+                broker.SelectOwnerByIdAsync(inputOwnerId),
                     Times.Once());
 
             this.storageBrokerMock.Verify(broker =>

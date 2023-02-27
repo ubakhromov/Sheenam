@@ -72,7 +72,13 @@ namespace Sheenam.Api.Services.Foundations.Owners
                 await this.storageBroker.UpdateOwnerAsync(owner);
         });
 
-        public ValueTask<Owner> RemoveOwnerByIdAsync(Guid ownerId) =>
-            throw new NotImplementedException();
+        public async ValueTask<Owner> RemoveOwnerByIdAsync(Guid ownerId)
+
+        {
+            Owner someOwner =
+                 await this.storageBroker.SelectOwnerByIdAsync(ownerId);
+
+            return await this.storageBroker.DeleteOwnerAsync(someOwner);
+        }
     }
 }
