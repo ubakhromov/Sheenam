@@ -7,8 +7,8 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using Sheenam.Api.Models.Foundations.Owner;
-using Sheenam.Api.Models.Foundations.Owner.Exceptions;
+using Sheenam.Api.Models.Foundations.Owners;
+using Sheenam.Api.Models.Foundations.Owners.Exceptions;
 using Xunit;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners

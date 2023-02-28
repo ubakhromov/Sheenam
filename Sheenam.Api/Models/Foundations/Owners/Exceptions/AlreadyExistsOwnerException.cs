@@ -7,7 +7,7 @@
 using System;
 using Xeptions;
 
-namespace Sheenam.Api.Models.Foundations.Owner.Exceptions
+namespace Sheenam.Api.Models.Foundations.Owners.Exceptions
 {
     public class AlreadyExistsOwnerException : Xeption
     {

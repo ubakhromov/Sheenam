@@ -7,8 +7,8 @@ using Moq;
 using System.Threading.Tasks;
 using System;
 using Xunit;
-using Sheenam.Api.Models.Foundations.Owner;
-using Sheenam.Api.Models.Foundations.Owner.Exceptions;
+using Sheenam.Api.Models.Foundations.Owners;
+using Sheenam.Api.Models.Foundations.Owners.Exceptions;
 using FluentAssertions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 

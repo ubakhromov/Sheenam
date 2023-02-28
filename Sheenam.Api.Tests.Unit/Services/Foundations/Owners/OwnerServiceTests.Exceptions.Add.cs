@@ -11,8 +11,8 @@ using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using Sheenam.Api.Models.Foundations.Owner;
-using Sheenam.Api.Models.Foundations.Owner.Exceptions;
+using Sheenam.Api.Models.Foundations.Owners.Exceptions;
+using Sheenam.Api.Models.Foundations.Owners;
 using Xunit;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners

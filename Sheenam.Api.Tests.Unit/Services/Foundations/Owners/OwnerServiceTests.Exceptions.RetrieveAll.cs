@@ -6,7 +6,7 @@
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
-using Sheenam.Api.Models.Foundations.Owner.Exceptions;
+using Sheenam.Api.Models.Foundations.Owners.Exceptions;
 using System;
 using Xunit;
 

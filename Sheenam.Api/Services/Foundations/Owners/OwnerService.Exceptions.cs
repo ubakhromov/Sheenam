@@ -11,8 +11,8 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
-using Sheenam.Api.Models.Foundations.Owner;
-using Sheenam.Api.Models.Foundations.Owner.Exceptions;
+using Sheenam.Api.Models.Foundations.Owners;
+using Sheenam.Api.Models.Foundations.Owners.Exceptions;
 using Xeptions;
 
 namespace Sheenam.Api.Services.Foundations.Owners

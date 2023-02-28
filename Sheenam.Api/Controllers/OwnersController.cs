@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using RESTFulSense.Controllers;
-using Sheenam.Api.Models.Foundations.Owner;
-using Sheenam.Api.Models.Foundations.Owner.Exceptions;
+using Sheenam.Api.Models.Foundations.Owners;
+using Sheenam.Api.Models.Foundations.Owners.Exceptions;
 using Sheenam.Api.Services.Foundations.Owners;
 
 namespace Sheenam.Api.Controllers
