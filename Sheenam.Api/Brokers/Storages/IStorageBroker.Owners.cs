@@ -7,7 +7,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Sheenam.Api.Models.Foundations.Owner;
+using Sheenam.Api.Models.Foundations.Owners;
 
 namespace Sheenam.Api.Brokers.Storages
 {

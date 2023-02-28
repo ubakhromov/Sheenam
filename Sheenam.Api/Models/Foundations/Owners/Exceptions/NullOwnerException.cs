@@ -3,15 +3,15 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
-using System;
+
 using Xeptions;
 
-namespace Sheenam.Api.Models.Foundations.Owner.Exceptions
+namespace Sheenam.Api.Models.Foundations.Owners.Exceptions
 {
-    public class NotFoundOwnerException : Xeption
+    public class NullOwnerException : Xeption
     {
-        public NotFoundOwnerException(Guid ownerId)
-           : base(message: $"Couldn't find guest with id: {ownerId}.")
+        public NullOwnerException()
+           : base(message: "Owner is null")
         { }
     }
 }

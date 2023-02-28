@@ -6,7 +6,7 @@
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
-using Sheenam.Api.Models.Foundations.Owner;
+using Sheenam.Api.Models.Foundations.Owners;
 using System;
 using System.Threading.Tasks;
 using Xunit;

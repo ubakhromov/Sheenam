@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
-using Sheenam.Api.Models.Foundations.Owner;
+using Sheenam.Api.Models.Foundations.Owners;
 using Xunit;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners

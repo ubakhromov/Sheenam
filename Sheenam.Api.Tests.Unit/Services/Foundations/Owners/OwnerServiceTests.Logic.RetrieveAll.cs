@@ -5,7 +5,7 @@
 
 using FluentAssertions;
 using Moq;
-using Sheenam.Api.Models.Foundations.Owner;
+using Sheenam.Api.Models.Foundations.Owners;
 using System.Linq;
 using Xunit;
 

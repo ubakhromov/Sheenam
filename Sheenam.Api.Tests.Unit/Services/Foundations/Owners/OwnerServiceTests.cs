@@ -14,7 +14,7 @@ using Moq;
 using Sheenam.Api.Brokers.DateTimes;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
-using Sheenam.Api.Models.Foundations.Owner;
+using Sheenam.Api.Models.Foundations.Owners;
 using Sheenam.Api.Services.Foundations.Owners;
 using Tynamix.ObjectFiller;
 using Xeptions;
