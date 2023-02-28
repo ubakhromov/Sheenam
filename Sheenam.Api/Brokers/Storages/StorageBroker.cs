@@ -24,6 +24,9 @@ namespace Sheenam.Api.Brokers.Storages
             this.logger = logger;
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder) =>
+            AddAccommodationsReferences(modelBuilder);        
+
         private async ValueTask<T> InsertAsync<T>(T @object)
         {
             var broker = new StorageBroker(this.configuration);
