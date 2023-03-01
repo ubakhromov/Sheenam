@@ -3,10 +3,10 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System.Linq;
 using FluentAssertions;
 using Moq;
 using Sheenam.Api.Models.Foundations.Owners;
-using System.Linq;
 using Xunit;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners

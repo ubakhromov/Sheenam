@@ -3,16 +3,13 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Force.DeepCloner;
-using Microsoft.Extensions.Hosting;
 using Moq;
 using Sheenam.Api.Models.Foundations.Owners;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
 {

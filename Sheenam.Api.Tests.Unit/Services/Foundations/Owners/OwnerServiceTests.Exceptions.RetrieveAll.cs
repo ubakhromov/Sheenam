@@ -3,11 +3,11 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
 using Sheenam.Api.Models.Foundations.Owners.Exceptions;
-using System;
 using Xunit;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners

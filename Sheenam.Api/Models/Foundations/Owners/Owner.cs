@@ -3,10 +3,10 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
-using Sheenam.Api.Models.Foundations.Accommodations;
-using Sheenam.Api.Models.Foundations.Guests;
 using System;
 using System.Collections.Generic;
+using Sheenam.Api.Models.Foundations.Accommodations;
+using Sheenam.Api.Models.Foundations.Guests;
 
 namespace Sheenam.Api.Models.Foundations.Owners
 {
@@ -21,7 +21,7 @@ namespace Sheenam.Api.Models.Foundations.Owners
         public GenderType Gender { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
-       
+
         public IEnumerable<Accommodation> Accommodations { get; set; }
     }
 }

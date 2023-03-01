@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Moq;
 using Sheenam.Api.Models.Foundations.Owners;
 using Sheenam.Api.Models.Foundations.Owners.Exceptions;

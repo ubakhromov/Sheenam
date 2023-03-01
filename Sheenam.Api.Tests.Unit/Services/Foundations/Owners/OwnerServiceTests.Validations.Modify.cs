@@ -3,14 +3,13 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
-using Moq;
-using System.Threading.Tasks;
 using System;
-using Xunit;
+using System.Threading.Tasks;
+using FluentAssertions;
+using Moq;
 using Sheenam.Api.Models.Foundations.Owners;
 using Sheenam.Api.Models.Foundations.Owners.Exceptions;
-using FluentAssertions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Xunit;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
 {
@@ -94,7 +93,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             invalidOwnerException.AddData(
                 key: nameof(Owner.CreatedDate),
                 values: "Date is required");
-           
+
 
             invalidOwnerException.AddData(
                 key: nameof(Owner.UpdatedDate),

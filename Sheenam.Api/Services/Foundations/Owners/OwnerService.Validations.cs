@@ -4,11 +4,8 @@
 // ==================================================
 
 using System;
-using System.Data;
-using Microsoft.Extensions.Hosting;
 using Sheenam.Api.Models.Foundations.Owners;
 using Sheenam.Api.Models.Foundations.Owners.Exceptions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Sheenam.Api.Services.Foundations.Owners
 {
