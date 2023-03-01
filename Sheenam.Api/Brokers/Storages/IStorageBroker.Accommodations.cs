@@ -4,16 +4,12 @@
 // ==================================================
 
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Sheenam.Api.Models.Foundations.Accommodations;
 
 namespace Sheenam.Api.Brokers.Storages
 {
-    public partial class StorageBroker
+    public partial interface IStorageBroker
     {
-        public DbSet<Accommodation> Accommodations { get; set; }
-
-        public async ValueTask<Accommodation> InsertAccommodationAsync(Accommodation accommodation) =>
-            await this.InsertAsync(accommodation);
+        ValueTask<Accommodation> InsertAccommodationAsync(Accommodation accommodation);
     }
 }
