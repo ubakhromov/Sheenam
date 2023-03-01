@@ -21,9 +21,15 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
             // given
             Accommodation randomAccommodation = 
                 CreateRandomAccommodation();
-            Accommodation inputAccommodation = randomAccommodation;
-            Accommodation insertedAccommodation = inputAccommodation;
-            Accommodation expectedAccommodation = insertedAccommodation.DeepClone();
+
+            Accommodation inputAccommodation =
+                randomAccommodation;
+
+            Accommodation insertedAccommodation =
+                inputAccommodation;
+
+            Accommodation expectedAccommodation = 
+                insertedAccommodation.DeepClone();
 
             this.storageBrokerMock.Setup(broker =>
                 broker.InsertAccommodationAsync(inputAccommodation))

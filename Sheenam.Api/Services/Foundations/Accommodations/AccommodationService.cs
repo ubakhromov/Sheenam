@@ -24,7 +24,7 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
             this.loggingBroker = loggingBroker; 
         }
 
-        public ValueTask<Accommodation> AddAccommodationAsync(Accommodation accommodation) =>
-        throw new NotImplementedException();
+        public async ValueTask<Accommodation> AddAccommodationAsync(Accommodation accommodation) =>
+            await this.storageBroker.InsertAccommodationAsync(accommodation);        
     }
 }
