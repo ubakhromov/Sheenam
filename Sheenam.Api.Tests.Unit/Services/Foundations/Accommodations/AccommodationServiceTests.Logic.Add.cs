@@ -7,7 +7,7 @@ using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
 using Sheenam.Api.Models.Foundations.Accommodations;
-using Sheenam.Api.Models.Foundations.Owners;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -19,8 +19,10 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
         public async Task ShouldAddAccommodationAsync()
         {
             // given
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+
             Accommodation randomAccommodation = 
-                CreateRandomAccommodation();
+                CreateRandomAccommodation(randomDateTime);            
 
             Accommodation inputAccommodation =
                 randomAccommodation;
@@ -46,6 +48,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
                 broker.InsertAccommodationAsync(inputAccommodation),
                     Times.Once());
 
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }

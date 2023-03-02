@@ -6,7 +6,6 @@
 using Moq;
 using Sheenam.Api.Models.Foundations.Accommodations;
 using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
-using Sheenam.Api.Models.Foundations.Owners.Exceptions;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -44,6 +43,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
                 broker.InsertAccommodationAsync(It.IsAny<Accommodation>()),
                     Times.Never);
 
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
