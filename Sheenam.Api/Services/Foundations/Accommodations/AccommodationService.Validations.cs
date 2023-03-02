@@ -24,8 +24,13 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
                 (Rule: IsInvalid(accommodation.Area), Parameter: nameof(Accommodation.Area)),
                 (Rule: IsInvalid(accommodation.Price), Parameter: nameof(Accommodation.Price)),
                 (Rule: IsInvalid(accommodation.CreatedDate), Parameter: nameof(Accommodation.CreatedDate)),
-                (Rule: IsInvalid(accommodation.UpdatedDate), Parameter: nameof(Accommodation.UpdatedDate))
-                );
+                (Rule: IsInvalid(accommodation.UpdatedDate), Parameter: nameof(Accommodation.UpdatedDate)),
+
+                 (Rule: IsNotSame(
+                    firstDate: accommodation.UpdatedDate,
+                    secondDate: accommodation.CreatedDate,
+                    secondDateName: nameof(accommodation.CreatedDate)),
+                Parameter: nameof(accommodation.UpdatedDate)));
         }
 
         private static void ValidateAccommodationIsNotNull(Accommodation accommodation)
@@ -65,6 +70,15 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
             Condition = price == default,
             Message = "Price is required"
         };
+
+        private static dynamic IsNotSame(
+           DateTimeOffset firstDate,
+           DateTimeOffset secondDate,
+           string secondDateName) => new
+           {
+               Condition = firstDate != secondDate,
+               Message = $"Date is not the same as {secondDateName}"
+           };
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
