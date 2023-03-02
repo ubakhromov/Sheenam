@@ -3,15 +3,12 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
-using FluentAssertions;
-using Force.DeepCloner;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Hosting;
-using Moq;
-using Sheenam.Api.Models.Foundations.Owners;
-using Sheenam.Api.Models.Foundations.Owners.Exceptions;
 using System;
 using System.Threading.Tasks;
+using FluentAssertions;
+using Force.DeepCloner;
+using Moq;
+using Sheenam.Api.Models.Foundations.Owners;
 using Xunit;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners

@@ -7,7 +7,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
 using RESTFulSense.Controllers;
 using Sheenam.Api.Models.Foundations.Owners;
 using Sheenam.Api.Models.Foundations.Owners.Exceptions;

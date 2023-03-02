@@ -3,14 +3,13 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
-using Microsoft.Extensions.Hosting;
-using Moq;
-using System.Threading.Tasks;
 using System;
-using Xunit;
-using Sheenam.Api.Models.Foundations.Owners.Exceptions;
-using Sheenam.Api.Models.Foundations.Owners;
+using System.Threading.Tasks;
 using FluentAssertions;
+using Moq;
+using Sheenam.Api.Models.Foundations.Owners;
+using Sheenam.Api.Models.Foundations.Owners.Exceptions;
+using Xunit;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
 {

@@ -25,7 +25,7 @@ namespace Sheenam.Api.Brokers.Storages
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) =>
-            AddAccommodationsReferences(modelBuilder);        
+            AddAccommodationsReferences(modelBuilder);
 
         private async ValueTask<T> InsertAsync<T>(T @object)
         {
