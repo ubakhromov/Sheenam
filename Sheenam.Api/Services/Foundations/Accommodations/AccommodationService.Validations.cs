@@ -8,12 +8,13 @@ using System.Data;
 using System.Reflection.Metadata;
 using Sheenam.Api.Models.Foundations.Accommodations;
 using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
+using Sheenam.Api.Models.Foundations.Owners;
 
 namespace Sheenam.Api.Services.Foundations.Accommodations
 {
     public partial class AccommodationService
     {
-        public static void ValidateAccommodationOnAdd(Accommodation accommodation)
+        public void ValidateAccommodationOnAdd(Accommodation accommodation)
         {
             ValidateAccommodationIsNotNull(accommodation);
 
@@ -29,8 +30,10 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
                  (Rule: IsNotSame(
                     firstDate: accommodation.UpdatedDate,
                     secondDate: accommodation.CreatedDate,
-                    secondDateName: nameof(accommodation.CreatedDate)),
-                Parameter: nameof(accommodation.UpdatedDate)));
+                    secondDateName: nameof(Accommodation.CreatedDate)),
+                Parameter: nameof(Accommodation.UpdatedDate)),
+
+                 (Rule: IsNotRecent(accommodation.CreatedDate), Parameter: nameof(Accommodation.CreatedDate)));
         }
 
         private static void ValidateAccommodationIsNotNull(Accommodation accommodation)
@@ -70,6 +73,23 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
             Condition = price == default,
             Message = "Price is required"
         };
+
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent"
+        };
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime =
+                this.dateTimeBroker.GetCurrentDateTime();
+
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+            TimeSpan oneMinute = TimeSpan.FromMinutes(1);
+
+            return timeDifference.Duration() > oneMinute;
+        }
 
         private static dynamic IsNotSame(
            DateTimeOffset firstDate,

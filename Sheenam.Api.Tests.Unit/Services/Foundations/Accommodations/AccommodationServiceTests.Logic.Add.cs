@@ -33,6 +33,10 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
             Accommodation expectedAccommodation = 
                 insertedAccommodation.DeepClone();
 
+            this.dateTimeBrokerMock.Setup(broker =>
+              broker.GetCurrentDateTime())
+                  .Returns(randomDateTime);
+
             this.storageBrokerMock.Setup(broker =>
                 broker.InsertAccommodationAsync(inputAccommodation))
                     .ReturnsAsync(insertedAccommodation);
@@ -44,10 +48,13 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
             // then
             actualAccommodation.Should().BeEquivalentTo(expectedAccommodation);
 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once);
+
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertAccommodationAsync(inputAccommodation),
-                    Times.Once());
-
+                    Times.Once());
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
