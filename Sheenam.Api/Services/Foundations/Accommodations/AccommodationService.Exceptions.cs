@@ -25,6 +25,10 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
             {
                 throw CreateAndLogValidationException(nullAccommodationException);
             }
+            catch (InvalidAccommodationException invalidAccommodationException) 
+            {
+                throw CreateAndLogValidationException(invalidAccommodationException);
+            }
         }
 
         private AccommodationValidationException CreateAndLogValidationException(

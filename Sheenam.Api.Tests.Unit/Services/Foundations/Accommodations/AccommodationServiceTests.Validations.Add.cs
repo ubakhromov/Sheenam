@@ -81,11 +81,11 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
 
             invalidAccommodationException.AddData(
                 key: nameof(Accommodation.Area),
-                values: "Text is required");
+                values: "Area is required");
 
             invalidAccommodationException.AddData(
                 key: nameof(Accommodation.Price),
-                values: "Text is required");
+                values: "Price is required");
 
             invalidAccommodationException.AddData(
                 key: nameof(Accommodation.CreatedDate),
