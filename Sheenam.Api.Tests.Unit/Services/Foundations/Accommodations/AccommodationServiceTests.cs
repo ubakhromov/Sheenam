@@ -13,6 +13,7 @@ using Sheenam.Api.Models.Foundations.Accommodations;
 using Sheenam.Api.Services.Foundations.Accommodations;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
 {
@@ -49,6 +50,21 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
 
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 10).GetValue();
+
+        private static int GetRandomNegativeNumber() =>
+            -1 * new IntRange(min: 2, max: 10).GetValue();
+
+        public static TheoryData MinutesBeforeOrAfter()
+        {
+            int randomNumber = GetRandomNumber();
+            int randomNegativeNumber = GetRandomNegativeNumber();
+
+            return new TheoryData<int>
+            {
+                randomNumber,
+                randomNegativeNumber
+            };
+        }
 
         private static Filler<Accommodation> CreateAccommodationFiller(DateTimeOffset date)
         {

@@ -176,5 +176,64 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(MinutesBeforeOrAfter))]
+        public async Task ShouldThrowValidationExceptionOnAddIfCreatedDateIsNotRecentAndLogItAsync(
+            int minutesBeforeOrAfter)
+        {
+            // given
+            DateTimeOffset randomDateTime =
+                GetRandomDateTimeOffset();
+
+            DateTimeOffset invalidDateTime =
+                randomDateTime.AddMinutes(minutesBeforeOrAfter);
+
+            Accommodation randomAccommodation = CreateRandomAccommodation(invalidDateTime);
+            Accommodation invalidAccommodation = randomAccommodation;
+
+            var invalidAccommodationException =
+                new InvalidAccommodationException();
+
+            invalidAccommodationException.AddData(
+                key: nameof(Accommodation.CreatedDate),
+                values: "Date is not recent");
+
+            var expectedAccommodationValidationException =
+                new AccommodationValidationException(invalidAccommodationException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Returns(randomDateTime);
+
+            // when
+            ValueTask<Accommodation> addAccommodationTask =
+                this.accommodationService.AddAccommodationAsync(invalidAccommodation);
+
+            AccommodationValidationException actualAccommodationValidationException =
+               await Assert.ThrowsAsync<AccommodationValidationException>(
+                   addAccommodationTask.AsTask);
+
+            // then
+            actualAccommodationValidationException.Should().BeEquivalentTo(
+                expectedAccommodationValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedAccommodationValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertAccommodationAsync(It.IsAny<Accommodation>()),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
