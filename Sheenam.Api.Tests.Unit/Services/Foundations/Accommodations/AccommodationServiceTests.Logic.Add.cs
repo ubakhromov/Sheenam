@@ -22,7 +22,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
             DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
 
             Accommodation randomAccommodation = 
-                CreateRandomAccommodation(randomDateTime);            
+                CreateRandomAccommodation(randomDateTime);
 
             Accommodation inputAccommodation =
                 randomAccommodation;
