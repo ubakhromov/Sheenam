@@ -23,5 +23,7 @@ namespace Sheenam.Api.Models.Foundations.Accommodations
         public HouseType House { get; set; }
         public decimal Price { get; set; }
         public bool IsShared { get; set; }
+        public DateTimeOffset CreatedDate { get; set; }
+        public DateTimeOffset UpdatedDate { get; set; }
     }
 }
