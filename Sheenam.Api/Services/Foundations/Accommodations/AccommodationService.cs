@@ -11,7 +11,7 @@ using Sheenam.Api.Models.Foundations.Accommodations;
 
 namespace Sheenam.Api.Services.Foundations.Accommodations
 {
-    public class AccommodationService : IAccommodationService
+    public partial class AccommodationService : IAccommodationService
     {
         private readonly IStorageBroker storageBroker;
         private readonly ILoggingBroker loggingBroker;
@@ -24,7 +24,12 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
             this.loggingBroker = loggingBroker; 
         }
 
-        public async ValueTask<Accommodation> AddAccommodationAsync(Accommodation accommodation) =>
-            await this.storageBroker.InsertAccommodationAsync(accommodation);        
+        public ValueTask<Accommodation> AddAccommodationAsync(Accommodation accommodation) =>
+        TryCatch(async () =>
+        { 
+            ValidateAccommodationOnAdd(accommodation);
+
+            return await this.storageBroker.InsertAccommodationAsync(accommodation);
+        });
     }
 }

@@ -6,7 +6,7 @@
 using Moq;
 using Sheenam.Api.Models.Foundations.Accommodations;
 using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
-using Sheenam.Api.Models.Foundations.Guests.Exceptions;
+using Sheenam.Api.Models.Foundations.Owners.Exceptions;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -27,6 +27,10 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
             //when
             ValueTask<Accommodation> addAccommodationTask =
                 this.accommodationService.AddAccommodationAsync(nullAccommodation);
+
+            AccommodationValidationException actualAccommodationValidationException =
+                await Assert.ThrowsAsync<AccommodationValidationException>(
+                    addAccommodationTask.AsTask);
 
             //then
             await Assert.ThrowsAsync<AccommodationValidationException>(() =>
