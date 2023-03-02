@@ -4,12 +4,14 @@
 // ==================================================
 
 using System;
+using System.Linq.Expressions;
 using Moq;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Models.Foundations.Accommodations;
 using Sheenam.Api.Services.Foundations.Accommodations;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
 {
@@ -28,6 +30,9 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
                 storageBroker: this.storageBrokerMock.Object,
                 loggingBroker: this.loggingBrokerMock.Object);
         }
+
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
 
         private static Accommodation CreateRandomAccommodation() =>
             CreateAccommodationFiller().Create();
