@@ -24,7 +24,7 @@ namespace Sheenam.Api.Controllers
             this.ownerService = ownerService;
 
         [HttpPost]
-        public async ValueTask<ActionResult<Owner>> PostPostAsync(Owner owner)
+        public async ValueTask<ActionResult<Owner>> PostOwnerAsync(Owner owner)
         {
             try
             {
