@@ -3,11 +3,13 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Sheenam.Api.Models.Foundations.Accommodations;
+using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
 using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
 using Xeptions;
 
@@ -52,7 +54,13 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
 
                 throw CreateAndLogDependecyException(failedAccommodationStorageException);
             }
+            catch (Exception exception)
+            {
+                var failedAccommodationServiceException =
+                    new FailedAccommodationServiceException(exception);
 
+                throw CreateAndLogServiceException(failedAccommodationServiceException);
+            }
         }
 
         private AccommodationValidationException CreateAndLogValidationException(
@@ -92,6 +100,14 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
             this.loggingBroker.LogError(accommodationDependencyException);
 
             return accommodationDependencyException;
+        }
+
+        private AccommodationServiceException CreateAndLogServiceException(Xeption exception)
+        {
+            var accommodationServiceException = new AccommodationServiceException(exception);
+            this.loggingBroker.LogError(accommodationServiceException);
+
+            return accommodationServiceException;
         }
     }
 }
