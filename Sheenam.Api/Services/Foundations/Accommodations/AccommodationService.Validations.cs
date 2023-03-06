@@ -4,11 +4,8 @@
 // ==================================================
 
 using System;
-using System.Data;
-using System.Reflection.Metadata;
 using Sheenam.Api.Models.Foundations.Accommodations;
 using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
-using Sheenam.Api.Models.Foundations.Owners;
 
 namespace Sheenam.Api.Services.Foundations.Accommodations
 {
