@@ -6,7 +6,6 @@
 using Moq;
 using Sheenam.Api.Models.Foundations.Accommodations;
 using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
-using Sheenam.Api.Models.Foundations.Owners.Exceptions;
 using Sheenam.Api.Models.Foundations.Owners;
 using System.Threading.Tasks;
 using Xunit;

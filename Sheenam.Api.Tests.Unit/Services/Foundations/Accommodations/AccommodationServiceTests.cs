@@ -5,6 +5,8 @@
 
 using System;
 using System.Linq.Expressions;
+using Microsoft.Data.SqlClient;
+using System.Runtime.Serialization;
 using Moq;
 using Sheenam.Api.Brokers.DateTimes;
 using Sheenam.Api.Brokers.Loggings;
@@ -53,6 +55,9 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
 
         private static int GetRandomNegativeNumber() =>
             -1 * new IntRange(min: 2, max: 10).GetValue();
+
+        private static SqlException GetSqlException() =>
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         public static TheoryData MinutesBeforeOrAfter()
         {
