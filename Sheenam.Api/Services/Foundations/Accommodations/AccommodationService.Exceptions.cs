@@ -10,7 +10,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Sheenam.Api.Models.Foundations.Accommodations;
 using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
-using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
 using Xeptions;
 
 namespace Sheenam.Api.Services.Foundations.Accommodations
@@ -29,7 +28,7 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
             {
                 throw CreateAndLogValidationException(nullAccommodationException);
             }
-            catch (InvalidAccommodationException invalidAccommodationException) 
+            catch (InvalidAccommodationException invalidAccommodationException)
             {
                 throw CreateAndLogValidationException(invalidAccommodationException);
             }

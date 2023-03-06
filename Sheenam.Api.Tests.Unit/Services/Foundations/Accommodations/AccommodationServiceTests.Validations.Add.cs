@@ -3,14 +3,14 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System;
+using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
 using Sheenam.Api.Models.Foundations.Accommodations;
 using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
 using Sheenam.Api.Models.Foundations.Owners;
-using System.Threading.Tasks;
 using Xunit;
-using FluentAssertions;
-using System;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
 {
@@ -45,7 +45,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertAccommodationAsync(It.IsAny<Accommodation>()),
                     Times.Never);
-                        
+
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
@@ -117,7 +117,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertAccommodationAsync(It.IsAny<Accommodation>()),
                     Times.Never);
-                        
+
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
@@ -168,7 +168,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertOwnerAsync(It.IsAny<Owner>()),
                     Times.Never);
-            
+
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }

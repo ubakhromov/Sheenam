@@ -13,6 +13,6 @@ namespace Sheenam.Api.Models.Foundations.Accommodations.Exceptions
             : base(message: "Accommodation service error occured, please fix the problem and try again",
                   innerException)
         { }
-        
+
     }
 }

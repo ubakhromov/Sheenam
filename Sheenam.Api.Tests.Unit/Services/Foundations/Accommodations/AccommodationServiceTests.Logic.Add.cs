@@ -3,12 +3,12 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
 using Sheenam.Api.Models.Foundations.Accommodations;
-using System;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
@@ -21,7 +21,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
             // given
             DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
 
-            Accommodation randomAccommodation = 
+            Accommodation randomAccommodation =
                 CreateRandomAccommodation(randomDateTime);
 
             Accommodation inputAccommodation =
@@ -30,7 +30,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
             Accommodation insertedAccommodation =
                 inputAccommodation;
 
-            Accommodation expectedAccommodation = 
+            Accommodation expectedAccommodation =
                 insertedAccommodation.DeepClone();
 
             this.dateTimeBrokerMock.Setup(broker =>

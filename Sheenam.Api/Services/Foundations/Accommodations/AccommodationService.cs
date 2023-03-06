@@ -3,7 +3,6 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
-using System;
 using System.Threading.Tasks;
 using Sheenam.Api.Brokers.DateTimes;
 using Sheenam.Api.Brokers.Loggings;
@@ -19,7 +18,7 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
         private readonly IDateTimeBroker dateTimeBroker;
 
         public AccommodationService(
-            IStorageBroker storageBroker, 
+            IStorageBroker storageBroker,
             ILoggingBroker loggingBroker,
             IDateTimeBroker dateTimeBroker)
         {
@@ -30,7 +29,7 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
 
         public ValueTask<Accommodation> AddAccommodationAsync(Accommodation accommodation) =>
         TryCatch(async () =>
-        { 
+        {
             ValidateAccommodationOnAdd(accommodation);
 
             return await this.storageBroker.InsertAccommodationAsync(accommodation);

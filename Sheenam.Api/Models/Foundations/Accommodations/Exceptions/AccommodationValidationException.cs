@@ -7,7 +7,7 @@ using Xeptions;
 
 namespace Sheenam.Api.Models.Foundations.Accommodations.Exceptions
 {
-    public class AccommodationValidationException :Xeption
+    public class AccommodationValidationException : Xeption
     {
         public AccommodationValidationException(Xeption innerException)
         : base(message: "Accommodation validation error occured, fix the errors and try again",
