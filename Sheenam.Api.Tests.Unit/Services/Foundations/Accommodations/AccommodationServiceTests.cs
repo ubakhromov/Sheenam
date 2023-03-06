@@ -47,6 +47,9 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
         private static Accommodation CreateRandomAccommodation(DateTimeOffset dates) =>
        CreateAccommodationFiller(dates).Create();
 
+        private static string GetRandomMessage() =>
+            new MnemonicString(wordCount: GetRandomNumber()).GetValue();
+
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
 
