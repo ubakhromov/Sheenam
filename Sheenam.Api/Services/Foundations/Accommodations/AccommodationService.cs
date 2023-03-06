@@ -5,6 +5,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Sheenam.Api.Brokers.DateTimes;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Models.Foundations.Accommodations;
@@ -15,13 +16,16 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
     {
         private readonly IStorageBroker storageBroker;
         private readonly ILoggingBroker loggingBroker;
+        private readonly IDateTimeBroker dateTimeBroker;
 
         public AccommodationService(
             IStorageBroker storageBroker, 
-            ILoggingBroker loggingBroker)
+            ILoggingBroker loggingBroker,
+            IDateTimeBroker dateTimeBroker)
         {
             this.storageBroker = storageBroker;
-            this.loggingBroker = loggingBroker; 
+            this.loggingBroker = loggingBroker;
+            this.dateTimeBroker = dateTimeBroker;
         }
 
         public ValueTask<Accommodation> AddAccommodationAsync(Accommodation accommodation) =>
