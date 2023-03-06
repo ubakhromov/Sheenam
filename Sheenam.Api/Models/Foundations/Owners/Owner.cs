@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Sheenam.Api.Models.Foundations.Accommodations;
 using Sheenam.Api.Models.Foundations.Guests;
 
@@ -22,6 +23,7 @@ namespace Sheenam.Api.Models.Foundations.Owners
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
 
-        public Accommodation Accommodations { get; set; }
+        [JsonIgnore]
+        public IEnumerable<Accommodation> Accommodations { get; set; }
     }
 }

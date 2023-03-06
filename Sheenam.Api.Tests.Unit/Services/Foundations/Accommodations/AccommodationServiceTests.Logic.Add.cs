@@ -54,7 +54,8 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertAccommodationAsync(inputAccommodation),
-                    Times.Once());
+                    Times.Once());
+
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
