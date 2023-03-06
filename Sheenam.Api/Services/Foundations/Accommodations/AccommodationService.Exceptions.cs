@@ -4,8 +4,10 @@
 // ==================================================
 
 using System.Threading.Tasks;
+using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Sheenam.Api.Models.Foundations.Accommodations;
+using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
 using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
 using Xeptions;
 
@@ -36,6 +38,13 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
 
                 throw CreateAndLogCriticalDependencyException(failedAccommodationStorageException);
             }
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var alreadyExistAccommodationException =
+                    new AlreadyExistAccommodationException(duplicateKeyException);
+
+                throw CreateAndLogDependencyValidationException(alreadyExistAccommodationException);
+            }
         }
 
         private AccommodationValidationException CreateAndLogValidationException(
@@ -57,6 +66,16 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
             this.loggingBroker.LogCritical(accommodationDependencyException);
 
             return accommodationDependencyException;
+        }
+
+        private AccommodationDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
+        {
+            var AccommodationDependencyValidationException =
+                new AccommodationDependencyValidationException(exception);
+
+            this.loggingBroker.LogError(AccommodationDependencyValidationException);
+
+            return AccommodationDependencyValidationException;
         }
     }
 }
