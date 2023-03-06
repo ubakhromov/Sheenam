@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using Sheenam.Api.Brokers.DateTimes;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
+using Sheenam.Api.Services.Foundations.Accommodations;
 using Sheenam.Api.Services.Foundations.Guests;
 using Sheenam.Api.Services.Foundations.Owners;
 
@@ -75,6 +76,7 @@ namespace Sheenam.Api
         {
             services.AddTransient<IOwnerService, OwnerService>();
             services.AddTransient<IGuestServices, GuestServices>();
+            services.AddTransient<IAccommodationService, AccommodationService>();
         }
     }
 }

@@ -22,6 +22,6 @@ namespace Sheenam.Api.Models.Foundations.Owners
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
 
-        public IEnumerable<Accommodation> Accommodations { get; set; }
+        public Accommodation Accommodations { get; set; }
     }
 }
