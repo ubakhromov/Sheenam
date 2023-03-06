@@ -6,8 +6,8 @@
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Sheenam.Api.Models.Foundations.Accommodations;
-using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
 using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
 using Xeptions;
 
@@ -45,6 +45,14 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
 
                 throw CreateAndLogDependencyValidationException(alreadyExistAccommodationException);
             }
+            catch (DbUpdateException databaseUpdateException)
+            {
+                var failedAccommodationStorageException =
+                    new FailedAccommodationStorageException(databaseUpdateException);
+
+                throw CreateAndLogDependecyException(failedAccommodationStorageException);
+            }
+
         }
 
         private AccommodationValidationException CreateAndLogValidationException(
@@ -70,12 +78,20 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
 
         private AccommodationDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
         {
-            var AccommodationDependencyValidationException =
+            var accommodationDependencyValidationException =
                 new AccommodationDependencyValidationException(exception);
 
-            this.loggingBroker.LogError(AccommodationDependencyValidationException);
+            this.loggingBroker.LogError(accommodationDependencyValidationException);
 
-            return AccommodationDependencyValidationException;
+            return accommodationDependencyValidationException;
+        }
+
+        private AccommodationDependencyException CreateAndLogDependecyException(Xeption exception)
+        {
+            var accommodationDependencyException = new AccommodationDependencyException(exception);
+            this.loggingBroker.LogError(accommodationDependencyException);
+
+            return accommodationDependencyException;
         }
     }
 }
