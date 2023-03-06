@@ -14,7 +14,8 @@ namespace Sheenam.Api.Brokers.Storages
         {
             modelBuilder.Entity<Accommodation>()
                 .HasOne(accommodation => accommodation.Owner)
-                .WithOne(owner => owner.Accommodations)                
+                .WithMany(owner => owner.Accommodations)
+                .HasForeignKey(accommodation => accommodation.OwnerId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }
