@@ -6,8 +6,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
-using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
 using Sheenam.Api.Models.Foundations.Accommodations;
+using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
 using Sheenam.Api.Services.Foundations.Accommodations;
 
 namespace Sheenam.Api.Controllers

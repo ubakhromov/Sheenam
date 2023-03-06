@@ -17,7 +17,7 @@ namespace Sheenam.Api.Brokers.Storages
         public async ValueTask<Accommodation> InsertAccommodationAsync(Accommodation accommodation) =>
             await this.InsertAsync(accommodation);
 
-        public IQueryable<Accommodation> SelectAllAccomodations() =>
+        public IQueryable<Accommodation> SelectAllAccommodations() =>
             this.SelectAll<Accommodation>();
     }
 }

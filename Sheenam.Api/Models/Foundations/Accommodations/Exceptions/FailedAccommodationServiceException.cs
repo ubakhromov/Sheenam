@@ -3,7 +3,6 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
-using Sheenam.Api.Models.Foundations.Guests.Exceptions;
 using System;
 using Xeptions;
 
