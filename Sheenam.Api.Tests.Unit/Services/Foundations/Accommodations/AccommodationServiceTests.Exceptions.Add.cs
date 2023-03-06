@@ -165,5 +165,56 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnAddIfDatabaseUpdateErrorOccursAndLogItAsync()
+        {
+            // given
+            Accommodation someAccommodation = CreateRandomAccommodation();
+            var serviceException = new Exception();
+
+            var failedAccommodationServiceException =
+                new FailedAccommodationServiceException(serviceException);
+
+            var expectedAccommodationServiceException =
+                new AccommodationServiceException(failedAccommodationServiceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Throws(serviceException);
+
+            // when
+            ValueTask<Accommodation> addAccommodationTask =
+                this.accommodationService.AddAccommodationAsync(someAccommodation);
+
+            AccommodationServiceException actualAccommodationServiceException =
+              await Assert.ThrowsAsync<AccommodationServiceException>(
+                  addAccommodationTask.AsTask);
+
+            // then
+            actualAccommodationServiceException.Should().BeEquivalentTo(
+                expectedAccommodationServiceException);
+
+            // then
+            await Assert.ThrowsAsync<AccommodationServiceException>(() =>
+                addAccommodationTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertAccommodationAsync(It.IsAny<Accommodation>()),
+                    Times.Never);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedAccommodationServiceException))),
+                        Times.Once);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
