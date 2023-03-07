@@ -77,6 +77,13 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
 
                 throw CreateAndLogCriticalDependencyException(failedAccommodationStorageException);
             }
+            catch (Exception exception)
+            {
+                var failedAccommodationServiceException =
+                    new FailedAccommodationServiceException(exception);
+
+                throw CreateAndLogServiceException(failedAccommodationServiceException);
+            }
         }
 
         private AccommodationValidationException CreateAndLogValidationException(
