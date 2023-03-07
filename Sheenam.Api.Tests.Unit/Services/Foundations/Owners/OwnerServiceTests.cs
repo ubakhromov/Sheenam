@@ -64,8 +64,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
         private static IQueryable<Owner> CreateRandomOwners()
         {
             return CreateOwnerFiller(date: GetRandomDateTimeOffset())
-                .Create(count: GetRandomNumber())
-                    .AsQueryable();
+                .Create(count: GetRandomNumber()).AsQueryable();
         }
 
         private static Owner CreateRandomModifyOwner(DateTimeOffset dates)
