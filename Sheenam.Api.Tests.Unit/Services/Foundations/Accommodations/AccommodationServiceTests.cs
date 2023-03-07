@@ -4,6 +4,7 @@
 // ==================================================
 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using Microsoft.Data.SqlClient;
@@ -46,6 +47,12 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
 
         private static Accommodation CreateRandomAccommodation(DateTimeOffset dates) =>
        CreateAccommodationFiller(dates).Create();
+
+        private static IQueryable<Accommodation> CreateRandomAccommodations()
+        {
+            return CreateAccommodationFiller(date: GetRandomDateTimeOffset())
+                .Create(count: GetRandomNumber()).AsQueryable();
+        }
 
         private static string GetRandomMessage() =>
             new MnemonicString(wordCount: GetRandomNumber()).GetValue();

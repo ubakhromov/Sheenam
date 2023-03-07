@@ -20,7 +20,6 @@ namespace Sheenam.Api.Services.Foundations.Owners
         private delegate ValueTask<Owner> ReturningOwnerFunction();
         private delegate IQueryable<Owner> ReturningOwnersFunction();
 
-
         private async ValueTask<Owner> TryCatch(ReturningOwnerFunction returningOwnerFunction)
         {
             try
