@@ -3,6 +3,7 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
@@ -39,6 +40,26 @@ namespace Sheenam.Api.Controllers
                when (accommodationDependencyValidationException.InnerException is AlreadyExistAccommodationException)
             {
                 return Conflict(accommodationDependencyValidationException.InnerException);
+            }
+            catch (AccommodationDependencyException accommodationDependencyException)
+            {
+                return InternalServerError(accommodationDependencyException);
+            }
+            catch (AccommodationServiceException accommodationServiceException)
+            {
+                return InternalServerError(accommodationServiceException);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult<IQueryable<Accommodation>> GetAllAccommodations()
+        {
+            try
+            {
+                IQueryable<Accommodation> retrievedAccommodations =
+                    this.accommodationService.RetrieveAllAccommodations();
+
+                return Ok(retrievedAccommodations);
             }
             catch (AccommodationDependencyException accommodationDependencyException)
             {
