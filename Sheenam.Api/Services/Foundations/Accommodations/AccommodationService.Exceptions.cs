@@ -4,6 +4,7 @@
 // ==================================================
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
@@ -17,6 +18,7 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
     public partial class AccommodationService
     {
         private delegate ValueTask<Accommodation> ReturningAccommodationFuntion();
+        private delegate IQueryable<Accommodation> ReturningAccommodationsFunction();
 
         private async ValueTask<Accommodation> TryCatch(ReturningAccommodationFuntion returningAccommodationFuntion)
         {
@@ -59,6 +61,21 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
                     new FailedAccommodationServiceException(exception);
 
                 throw CreateAndLogServiceException(failedAccommodationServiceException);
+            }
+        }
+
+        private IQueryable<Accommodation> TryCatch(ReturningAccommodationsFunction returningAccommodationsFuntion)
+        {
+            try
+            {
+                return returningAccommodationsFuntion();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedAccommodationStorageException =
+                    new FailedAccommodationStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedAccommodationStorageException);
             }
         }
 

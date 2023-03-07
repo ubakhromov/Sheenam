@@ -37,12 +37,10 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
             return await this.storageBroker.InsertAccommodationAsync(accommodation);
         });
 
-        public IQueryable<Accommodation> RetrieveAllAccommodations()
+        public IQueryable<Accommodation> RetrieveAllAccommodations() =>
+        TryCatch(() =>
         {
-            IQueryable<Accommodation> storageAccommodations = 
-                this.storageBroker.SelectAllAccommodations();
-
-            return storageAccommodations;
-        }
+            return this.storageBroker.SelectAllAccommodations();
+        });
     }
 }
