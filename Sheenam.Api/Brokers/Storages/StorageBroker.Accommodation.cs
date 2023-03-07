@@ -3,6 +3,7 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -19,5 +20,8 @@ namespace Sheenam.Api.Brokers.Storages
 
         public IQueryable<Accommodation> SelectAllAccommodations() =>
             this.SelectAll<Accommodation>();
+
+        public async ValueTask<Accommodation> SelectAccommodationByIdAsync(Guid accommodationId) =>
+            await this.SelectAsync<Accommodation>(accommodationId);
     }
 }
