@@ -3,7 +3,6 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
-
 using System.Threading.Tasks;
 using FluentAssertions;
 using Force.DeepCloner;
