@@ -23,7 +23,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
                 GetRandomDateTimeOffset();
 
             Accommodation randomAccommodation =
-                CreateRandomAccommodation(randomDate);
+                CreateRandomModifyAccommodation(randomDate);
 
             Accommodation inputAccommodation =
                 randomAccommodation;
@@ -43,10 +43,6 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
             Guid inputAccommodationId =
                 inputAccommodation.Id;
 
-            this.dateTimeBrokerMock.Setup(broker =>
-                  broker.GetCurrentDateTime())
-                      .Returns(randomDate);
-
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectAccommodationByIdAsync(
                     inputAccommodationId))
@@ -65,11 +61,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
             // then
             actualAccommodation.Should().BeEquivalentTo(
                 expectedAccommodation);
-
-            this.dateTimeBrokerMock.Verify(broker =>
-                     broker.GetCurrentDateTime(),
-                         Times.Once);
-
+        
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectAccommodationByIdAsync(inputAccommodationId),
                     Times.Once);
@@ -77,11 +69,9 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateAccommodationAsync(inputAccommodation),
                     Times.Once);
-
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
-
     }
 }

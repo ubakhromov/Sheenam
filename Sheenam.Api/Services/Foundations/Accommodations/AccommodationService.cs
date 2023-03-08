@@ -10,6 +10,7 @@ using Sheenam.Api.Brokers.DateTimes;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Models.Foundations.Accommodations;
+using Sheenam.Api.Models.Foundations.Owners;
 
 namespace Sheenam.Api.Services.Foundations.Accommodations
 {
@@ -56,7 +57,12 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
             return maybeAccommodation;
         });
 
-        public ValueTask<Accommodation> ModifyAccommodationAsync(Accommodation accommodation) =>
-            throw new NotImplementedException();
+        public async ValueTask<Accommodation> ModifyAccommodationAsync(Accommodation accommodation)
+        {
+            var maybeAccommodation =
+               await this.storageBroker.SelectAccommodationByIdAsync(accommodation.Id);
+
+            return await this.storageBroker.UpdateAccommodationAsync(accommodation);
+        }
     }
 }

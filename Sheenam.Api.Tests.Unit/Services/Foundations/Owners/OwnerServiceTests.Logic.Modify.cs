@@ -31,17 +31,10 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
             inputOwner.UpdatedDate =
                 randomDate.AddMinutes(1);
 
-            Owner storageOwner =
-                inputOwner;
-
-            Owner updatedOwner =
-                inputOwner;
-
-            Owner expectedOwner =
-                updatedOwner.DeepClone();
-
-            Guid inputOwnerId =
-                inputOwner.Id;
+            Owner storageOwner = inputOwner;
+            Owner updatedOwner = inputOwner;
+            Owner expectedOwner = updatedOwner.DeepClone();
+            Guid inputOwnerId = inputOwner.Id;
 
             this.dateTimeBrokerMock.Setup(broker =>
                   broker.GetCurrentDateTime())
