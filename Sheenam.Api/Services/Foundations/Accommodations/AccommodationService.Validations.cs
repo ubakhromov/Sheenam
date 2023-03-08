@@ -44,6 +44,14 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
             }
         }
 
+        public void ValidateStorageAccommodation(Accommodation maybeAccommodation, Guid accommodationId)
+        {
+            if (maybeAccommodation is null)
+            {
+                throw new NotFoundAccommodationException(accommodationId);
+            }
+        }
+
         private static dynamic IsInvalid(Guid id) => new
         {
             Condition = id == Guid.Empty,

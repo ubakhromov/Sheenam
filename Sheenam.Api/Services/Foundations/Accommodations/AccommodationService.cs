@@ -48,8 +48,12 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
         {
             ValidateAccommodationById(accommodationId);
 
-            return await this.storageBroker
+            Accommodation maybeAccommodation = await this.storageBroker
                 .SelectAccommodationByIdAsync(accommodationId);
+
+            ValidateStorageAccommodation(maybeAccommodation, accommodationId);
+
+            return maybeAccommodation;
         });
     }
 }
