@@ -46,7 +46,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
             CreateAccommodationFiller(date: GetRandomDateTimeOffset()).Create();
 
         private static Accommodation CreateRandomAccommodation(DateTimeOffset dates) =>
-       CreateAccommodationFiller(dates).Create();
+            CreateAccommodationFiller(dates).Create();
 
         private static IQueryable<Accommodation> CreateRandomAccommodations()
         {

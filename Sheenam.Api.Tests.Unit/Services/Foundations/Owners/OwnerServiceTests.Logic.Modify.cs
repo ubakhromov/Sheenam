@@ -30,8 +30,10 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Owners
 
             inputOwner.UpdatedDate =
                 randomDate.AddMinutes(1);
+
             Owner storageOwner =
                 inputOwner;
+
             Owner updatedOwner =
                 inputOwner;
 

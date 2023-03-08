@@ -55,5 +55,8 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
 
             return maybeAccommodation;
         });
+
+        public ValueTask<Accommodation> ModifyAccommodationAsync(Accommodation accommodation) =>
+            throw new NotImplementedException();
     }
 }
