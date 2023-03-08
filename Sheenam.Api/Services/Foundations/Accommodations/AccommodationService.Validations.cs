@@ -33,11 +33,22 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
                  (Rule: IsNotRecent(accommodation.CreatedDate), Parameter: nameof(Accommodation.CreatedDate)));
         }
 
+        public void ValidateAccommodationById(Guid accommodationId) =>
+           Validate((Rule: IsInvalid(accommodationId), Parameter: nameof(Accommodation.Id)));
+
         private static void ValidateAccommodationIsNotNull(Accommodation accommodation)
         {
             if (accommodation is null)
             {
                 throw new NullAccommodationException();
+            }
+        }
+
+        public void ValidateStorageAccommodation(Accommodation maybeAccommodation, Guid accommodationId)
+        {
+            if (maybeAccommodation is null)
+            {
+                throw new NotFoundAccommodationException(accommodationId);
             }
         }
 

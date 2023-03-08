@@ -41,6 +41,10 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
 
                 throw CreateAndLogCriticalDependencyException(failedAccommodationStorageException);
             }
+            catch (NotFoundAccommodationException notFoundAccommodationExeption)
+            {
+                throw CreateAndLogValidationException(notFoundAccommodationExeption);
+            }
             catch (DuplicateKeyException duplicateKeyException)
             {
                 var alreadyExistAccommodationException =
