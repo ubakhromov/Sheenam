@@ -3,12 +3,15 @@
 // Free To Use To Find Comfort and Peace
 // ==================================================
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
 using Sheenam.Api.Models.Foundations.Accommodations;
 using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
+using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
+using Sheenam.Api.Models.Foundations.Accommodations;
 using Sheenam.Api.Services.Foundations.Accommodations;
 
 namespace Sheenam.Api.Controllers
@@ -60,6 +63,34 @@ namespace Sheenam.Api.Controllers
                     this.accommodationService.RetrieveAllAccommodations();
 
                 return Ok(retrievedAccommodations);
+            }
+            catch (AccommodationDependencyException accommodationDependencyException)
+            {
+                return InternalServerError(accommodationDependencyException);
+            }
+            catch (AccommodationServiceException accommodationServiceException)
+            {
+                return InternalServerError(accommodationServiceException);
+            }
+        }
+
+        [HttpGet("{AccommodationId}")]
+        public async ValueTask<ActionResult<Accommodation>> GetAccommodationByIdAsync(Guid accommodationId)
+        {
+            try
+            {
+                Accommodation accommodation = await this.accommodationService.RetrieveAccommodationByIdAsync(accommodationId);
+
+                return Ok(accommodation);
+            }
+            catch (AccommodationValidationException accommodationValidationException)
+                when (accommodationValidationException.InnerException is NotFoundAccommodationException)
+            {
+                return NotFound(accommodationValidationException.InnerException);
+            }
+            catch (AccommodationValidationException accommodationValidationException)
+            {
+                return BadRequest(accommodationValidationException.InnerException);
             }
             catch (AccommodationDependencyException accommodationDependencyException)
             {
