@@ -42,5 +42,8 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
         {
             return this.storageBroker.SelectAllAccommodations();
         });
+
+        public ValueTask<Accommodation> RetrieveAccommodationByIdAsync(Guid accommodationId) =>
+            throw new NotImplementedException();
     }
 }
