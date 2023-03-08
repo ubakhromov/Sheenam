@@ -43,7 +43,13 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
             return this.storageBroker.SelectAllAccommodations();
         });
 
-        public async ValueTask<Accommodation> RetrieveAccommodationByIdAsync(Guid accommodationId) =>
-            await this.storageBroker.SelectAccommodationByIdAsync(accommodationId);
+        public ValueTask<Accommodation> RetrieveAccommodationByIdAsync(Guid accommodationId) =>
+        TryCatch(async () =>
+        {
+            ValidateAccommodationById(accommodationId);
+
+            return await this.storageBroker
+                .SelectAccommodationByIdAsync(accommodationId);
+        });
     }
 }

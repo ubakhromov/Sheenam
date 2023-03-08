@@ -33,6 +33,9 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
                  (Rule: IsNotRecent(accommodation.CreatedDate), Parameter: nameof(Accommodation.CreatedDate)));
         }
 
+        public void ValidateAccommodationById(Guid accommodationId) =>
+           Validate((Rule: IsInvalid(accommodationId), Parameter: nameof(Accommodation.Id)));
+
         private static void ValidateAccommodationIsNotNull(Accommodation accommodation)
         {
             if (accommodation is null)
