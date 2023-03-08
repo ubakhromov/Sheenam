@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System;
 using Xunit;
 using FluentAssertions;
+using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
+using Sheenam.Api.Models.Foundations.Accommodations;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
 {
@@ -52,6 +54,48 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedAccommodationDependencyException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRetrieveByIdIfDatabaseUpdateErrorOccursAndLogItAsync()
+        {
+            // given
+            Guid someId = Guid.NewGuid();
+            var serviceException = new Exception();
+
+            var failedAccommodationServiceException =
+                new FailedAccommodationServiceException(serviceException);
+
+            var expectedAccommodationServiceException =
+                new AccommodationServiceException(failedAccommodationServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectAccommodationByIdAsync(It.IsAny<Guid>()))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<Accommodation> retrieveAccommodationByIdTask =
+                this.accommodationService.RetrieveAccommodationByIdAsync(someId);
+
+            AccommodationServiceException actualAccommodationServiceException =
+                await Assert.ThrowsAsync<AccommodationServiceException>(
+                    retrieveAccommodationByIdTask.AsTask);
+
+            // then
+            actualAccommodationServiceException.Should().BeEquivalentTo(expectedAccommodationServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectAccommodationByIdAsync(It.IsAny<Guid>()),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+               broker.LogError(It.Is(SameExceptionAs(
+                   expectedAccommodationServiceException))),
                         Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
