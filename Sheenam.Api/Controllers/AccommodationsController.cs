@@ -10,11 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
 using Sheenam.Api.Models.Foundations.Accommodations;
 using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
-using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
-using Sheenam.Api.Models.Foundations.Accommodations;
 using Sheenam.Api.Services.Foundations.Accommodations;
-using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
-using Sheenam.Api.Models.Foundations.Accommodations;
 
 namespace Sheenam.Api.Controllers
 {
@@ -127,6 +123,44 @@ namespace Sheenam.Api.Controllers
                 when (accommodationDependencyValidationException.InnerException is AlreadyExistAccommodationException)
             {
                 return Conflict(accommodationDependencyValidationException.InnerException);
+            }
+            catch (AccommodationDependencyException accommodationDependencyException)
+            {
+                return InternalServerError(accommodationDependencyException);
+            }
+            catch (AccommodationServiceException accommodationServiceException)
+            {
+                return InternalServerError(accommodationServiceException);
+            }
+        }
+
+        [HttpDelete("{accommodationId}")]
+        public async ValueTask<ActionResult<Accommodation>> DeleteAccommodationByIdAsync(Guid accommodationId)
+        {
+            try
+            {
+                Accommodation deletedAccommodation =
+                    await this.accommodationService.RemoveAccommodationByIdAsync(accommodationId);
+
+                return Ok(deletedAccommodation);
+            }
+            catch (AccommodationValidationException accommodationValidationException)
+                when (accommodationValidationException.InnerException is NotFoundAccommodationException)
+            {
+                return NotFound(accommodationValidationException.InnerException);
+            }
+            catch (AccommodationValidationException accommodationValidationException)
+            {
+                return BadRequest(accommodationValidationException.InnerException);
+            }
+            catch (AccommodationDependencyValidationException accommodationDependencyValidationException)
+                when (accommodationDependencyValidationException.InnerException is LockedAccommodationException)
+            {
+                return Locked(accommodationDependencyValidationException.InnerException);
+            }
+            catch (AccommodationDependencyValidationException accommodationDependencyValidationException)
+            {
+                return BadRequest(accommodationDependencyValidationException);
             }
             catch (AccommodationDependencyException accommodationDependencyException)
             {
