@@ -12,6 +12,10 @@ using Xunit;
 using FluentAssertions;
 using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
 using Sheenam.Api.Models.Foundations.Accommodations;
+using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
+using Sheenam.Api.Models.Foundations.Accommodations;
+using Sheenam.Api.Models.Foundations.Owners.Exceptions;
+using Sheenam.Api.Models.Foundations.Owners;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
 {
@@ -94,15 +98,25 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
 
             invalidAccommodationException.AddData(
                 key: nameof(Accommodation.CreatedDate),
-                values: "Date is required");
+                values: "Date is required");            
 
             invalidAccommodationException.AddData(
-                key: nameof(Accommodation.UpdatedDate),
-                values: "Date is required");
+               key: nameof(Accommodation.UpdatedDate),
+                   values: new[]
+                   {
+                        "Date is required",
+                        "Date is not recent",
+                        $"Date is the same as {nameof(Accommodation.CreatedDate)}"
+                   }
+               );
 
             var expectedAccommodationValidationException =
                 new AccommodationValidationException(invalidAccommodationException);
-            
+
+            this.dateTimeBrokerMock.Setup(broker =>
+               broker.GetCurrentDateTime())
+                   .Returns(GetRandomDateTimeOffset);
+
             // when
             ValueTask<Accommodation> modifyAccommodationTask =
                 this.accommodationService.ModifyAccommodationAsync(invalidAccommodation);
@@ -114,7 +128,12 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
             //then
             actualAccommodationValidationException.Should()
                 .BeEquivalentTo(expectedAccommodationValidationException);
-            
+
+            this.dateTimeBrokerMock.Verify(broker =>
+               broker.GetCurrentDateTime(),
+                   Times.Once);
+
+
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedAccommodationValidationException))),
@@ -125,6 +144,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
                     Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
@@ -171,6 +191,64 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectAccommodationByIdAsync(invalidAccommodation.Id),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [MemberData(nameof(MinutesBeforeOrAfter))]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(int minutes)
+        {
+            // given
+            DateTimeOffset dateTime = GetRandomDateTimeOffset();
+            Accommodation randomAccommodation = CreateRandomAccommodation(dateTime);
+            Accommodation inputAccommodation = randomAccommodation;
+            inputAccommodation.UpdatedDate = dateTime.AddMinutes(minutes);
+
+            var invalidAccommodationException =
+                new InvalidAccommodationException();
+
+            invalidAccommodationException.AddData(
+                key: nameof(Accommodation.UpdatedDate),
+                values: "Date is not recent");
+
+            var expectedAccommodationValidatonException =
+                new AccommodationValidationException(invalidAccommodationException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Returns(dateTime);
+
+            // when
+            ValueTask<Accommodation> modifyAccommodationTask =
+                this.accommodationService.ModifyAccommodationAsync(inputAccommodation);
+
+            AccommodationValidationException actualAccommodationValidationException =
+                await Assert.ThrowsAsync<AccommodationValidationException>(
+                    modifyAccommodationTask.AsTask);
+
+            // then
+            actualAccommodationValidationException.Should()
+                .BeEquivalentTo(expectedAccommodationValidatonException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedAccommodationValidatonException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectAccommodationByIdAsync(It.IsAny<Guid>()),
+                    Times.Never);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdateAccommodationAsync(It.IsAny<Accommodation>()),
                     Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
