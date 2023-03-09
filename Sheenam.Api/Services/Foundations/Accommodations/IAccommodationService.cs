@@ -16,5 +16,6 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
         IQueryable<Accommodation> RetrieveAllAccommodations();
         ValueTask<Accommodation> RetrieveAccommodationByIdAsync(Guid accommodationId);
         ValueTask<Accommodation> ModifyAccommodationAsync(Accommodation accommodation);
+        ValueTask<Accommodation> RemoveAccommodationByIdAsync(Guid accommodationId);
     }
 }
