@@ -65,6 +65,8 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
             var maybeAccommodation =
                await this.storageBroker.SelectAccommodationByIdAsync(accommodation.Id);
 
+            ValidateStorageAccommodation(maybeAccommodation, accommodation.Id);
+
             return await this.storageBroker.UpdateAccommodationAsync(accommodation);
         });
     }

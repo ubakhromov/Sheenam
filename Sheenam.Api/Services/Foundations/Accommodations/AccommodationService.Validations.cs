@@ -100,14 +100,15 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
                (Rule: IsInvalid(accommodation.Area), Parameter: nameof(Accommodation.Area)),
                (Rule: IsInvalid(accommodation.Price), Parameter: nameof(Accommodation.Price)),
                (Rule: IsInvalid(accommodation.CreatedDate), Parameter: nameof(Accommodation.CreatedDate)),
-               (Rule: IsInvalid(accommodation.UpdatedDate), Parameter: nameof(Accommodation.UpdatedDate)),
-               (Rule: IsNotRecent(accommodation.UpdatedDate), Parameter: nameof(Accommodation.UpdatedDate)),
+               (Rule: IsInvalid(accommodation.UpdatedDate), Parameter: nameof(Accommodation.UpdatedDate)),               
            
                (Rule: IsSame(
                     firstDate: accommodation.UpdatedDate,
                     secondDate: accommodation.CreatedDate,
                     secondDateName: nameof(Accommodation.CreatedDate)),
-                Parameter: nameof(Accommodation.UpdatedDate)));
+                 Parameter: nameof(Accommodation.UpdatedDate)),
+
+                (Rule: IsNotRecent(accommodation.UpdatedDate), Parameter: nameof(Accommodation.UpdatedDate)));
         }
 
         private bool IsDateNotRecent(DateTimeOffset date)

@@ -101,8 +101,8 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
                    values: new[]
                    {
                         "Date is required",
-                        "Date is not recent",
-                        $"Date is the same as {nameof(Accommodation.CreatedDate)}"
+                        $"Date is the same as {nameof(Accommodation.CreatedDate)}",
+                        "Date is not recent"
                    }
                );
 
