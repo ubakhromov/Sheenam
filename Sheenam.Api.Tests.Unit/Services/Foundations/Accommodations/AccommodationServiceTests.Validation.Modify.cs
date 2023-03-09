@@ -10,6 +10,8 @@ using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
 using Sheenam.Api.Models.Foundations.Accommodations;
 using Xunit;
 using FluentAssertions;
+using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
+using Sheenam.Api.Models.Foundations.Accommodations;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
 {
@@ -122,6 +124,56 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
                 broker.UpdateAccommodationAsync(It.IsAny<Accommodation>()),
                     Times.Never);
 
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotSameAsCreatedDateAndLogItAsync()
+        {
+            // given
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            Accommodation randomAccommodation = CreateRandomAccommodation(randomDateTime);
+            Accommodation invalidAccommodation = randomAccommodation;
+            var invalidAccommodationException = new InvalidAccommodationException();
+
+            invalidAccommodationException.AddData(
+                key: nameof(Accommodation.UpdatedDate),
+                values: $"Date is the same as {nameof(Accommodation.CreatedDate)}");
+
+            var expectedAccommodationValidationException =
+                new AccommodationValidationException(invalidAccommodationException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Returns(randomDateTime);
+
+            // when
+            ValueTask<Accommodation> modifyProfileTask =
+                this.accommodationService.ModifyAccommodationAsync(invalidAccommodation);
+
+            AccommodationValidationException actualAccommodationValidationException =
+                await Assert.ThrowsAsync<AccommodationValidationException>(
+                    modifyProfileTask.AsTask);
+
+            // then
+            actualAccommodationValidationException.Should()
+                .BeEquivalentTo(expectedAccommodationValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedAccommodationValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectAccommodationByIdAsync(invalidAccommodation.Id),
+                    Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
