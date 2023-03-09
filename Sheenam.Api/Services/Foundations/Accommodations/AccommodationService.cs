@@ -70,12 +70,15 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
             return await this.storageBroker.UpdateAccommodationAsync(accommodation);
         });
 
-        public async ValueTask<Accommodation> RemoveAccommodationByIdAsync(Guid accommodationId)
+        public ValueTask<Accommodation> RemoveAccommodationByIdAsync(Guid accommodationId) =>
+        TryCatch(async () =>
         {
+            ValidateAccommodationById(accommodationId);
+
             Accommodation someAccommodation =
                 await this.storageBroker.SelectAccommodationByIdAsync(accommodationId);
 
             return await this.storageBroker.DeleteAccommodationAsync(someAccommodation);
-        }
+        });
     }
 }
