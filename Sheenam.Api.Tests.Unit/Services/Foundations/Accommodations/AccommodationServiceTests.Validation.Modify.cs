@@ -98,23 +98,9 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
                 key: nameof(Accommodation.UpdatedDate),
                 values: "Date is required");
 
-            invalidAccommodationException.AddData(
-                key: nameof(Accommodation.UpdatedDate),
-                    values: new[]
-                    {
-                        "Date is required",
-                        $"Date is the same as {nameof(Accommodation.CreatedDate)}",
-                        "Date is not recent"
-                    }
-                );
-
             var expectedAccommodationValidationException =
                 new AccommodationValidationException(invalidAccommodationException);
-
-            this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTime())
-                    .Returns(GetRandomDateTimeOffset);
-
+            
             // when
             ValueTask<Accommodation> modifyAccommodationTask =
                 this.accommodationService.ModifyAccommodationAsync(invalidAccommodation);
@@ -126,11 +112,7 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
             //then
             actualAccommodationValidationException.Should()
                 .BeEquivalentTo(expectedAccommodationValidationException);
-
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(),
-                    Times.Once);
-
+            
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedAccommodationValidationException))),
@@ -141,7 +123,6 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
                     Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }

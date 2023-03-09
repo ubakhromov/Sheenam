@@ -91,6 +91,15 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
         private void ValidateAccommodationOnModify(Accommodation accommodation)
         {
             ValidateAccommodationIsNotNull(accommodation);
+
+            Validate(
+               (Rule: IsInvalid(accommodation.Id), Parameter: nameof(Accommodation.Id)),
+               (Rule: IsInvalid(accommodation.OwnerId), Parameter: nameof(Accommodation.OwnerId)),
+               (Rule: IsInvalid(accommodation.Address), Parameter: nameof(Accommodation.Address)),
+               (Rule: IsInvalid(accommodation.Area), Parameter: nameof(Accommodation.Area)),
+               (Rule: IsInvalid(accommodation.Price), Parameter: nameof(Accommodation.Price)),
+               (Rule: IsInvalid(accommodation.CreatedDate), Parameter: nameof(Accommodation.CreatedDate)),
+               (Rule: IsInvalid(accommodation.UpdatedDate), Parameter: nameof(Accommodation.UpdatedDate)));
         }
 
         private bool IsDateNotRecent(DateTimeOffset date)
