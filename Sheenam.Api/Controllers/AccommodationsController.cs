@@ -13,6 +13,8 @@ using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
 using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
 using Sheenam.Api.Models.Foundations.Accommodations;
 using Sheenam.Api.Services.Foundations.Accommodations;
+using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
+using Sheenam.Api.Models.Foundations.Accommodations;
 
 namespace Sheenam.Api.Controllers
 {
@@ -91,6 +93,40 @@ namespace Sheenam.Api.Controllers
             catch (AccommodationValidationException accommodationValidationException)
             {
                 return BadRequest(accommodationValidationException.InnerException);
+            }
+            catch (AccommodationDependencyException accommodationDependencyException)
+            {
+                return InternalServerError(accommodationDependencyException);
+            }
+            catch (AccommodationServiceException accommodationServiceException)
+            {
+                return InternalServerError(accommodationServiceException);
+            }
+        }
+
+        [HttpPut]
+        public async ValueTask<ActionResult<Accommodation>> PutAccommodationAsync(Accommodation accommodation)
+        {
+            try
+            {
+                Accommodation modifiedAccommodation =
+                    await this.accommodationService.ModifyAccommodationAsync(accommodation);
+
+                return Ok(modifiedAccommodation);
+            }
+            catch (AccommodationValidationException accommodationValidationException)
+                when (accommodationValidationException.InnerException is NotFoundAccommodationException)
+            {
+                return NotFound(accommodationValidationException.InnerException);
+            }
+            catch (AccommodationValidationException accommodationValidationException)
+            {
+                return BadRequest(accommodationValidationException.InnerException);
+            }
+            catch (AccommodationDependencyValidationException accommodationDependencyValidationException)
+                when (accommodationDependencyValidationException.InnerException is AlreadyExistAccommodationException)
+            {
+                return Conflict(accommodationDependencyValidationException.InnerException);
             }
             catch (AccommodationDependencyException accommodationDependencyException)
             {
