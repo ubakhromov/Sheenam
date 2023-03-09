@@ -14,6 +14,8 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
 using Sheenam.Api.Models.Foundations.Accommodations;
+using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
+using Sheenam.Api.Models.Foundations.Accommodations;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
 {
@@ -122,6 +124,62 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedAccommodationDependencyException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnModifyIfDatabaseUpdateConcurrencyErrorOccursAndLogItAsync()
+        {
+            // given
+            int minutesInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            Accommodation randomAccommodation = CreateRandomAccommodation(randomDateTime);
+            Accommodation someAccommodation = randomAccommodation;
+            someAccommodation.CreatedDate = randomDateTime.AddMinutes(minutesInPast);
+            Guid postId = someAccommodation.Id;
+            var databaseUpdateConcurrencyException = new DbUpdateConcurrencyException();
+
+            var lockedAccommodationException =
+                new LockedAccommodationException(databaseUpdateConcurrencyException);
+
+            var expectedAccommodationDependencyValidationException =
+                new AccommodationDependencyValidationException(lockedAccommodationException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectAccommodationByIdAsync(postId))
+                    .ThrowsAsync(databaseUpdateConcurrencyException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Returns(randomDateTime);
+
+            // when
+            ValueTask<Accommodation> modifyAccommodationTask =
+                this.accommodationService.ModifyAccommodationAsync(someAccommodation);
+
+            AccommodationDependencyValidationException actualAccommodationDependencyValidationException =
+                await Assert.ThrowsAsync<AccommodationDependencyValidationException>(
+                    modifyAccommodationTask.AsTask);
+
+            // then
+            actualAccommodationDependencyValidationException.Should().BeEquivalentTo(
+                expectedAccommodationDependencyValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectAccommodationByIdAsync(postId),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedAccommodationDependencyValidationException))),
                         Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
