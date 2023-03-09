@@ -11,6 +11,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Sheenam.Api.Models.Foundations.Accommodations;
 using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
+using Sheenam.Api.Models.Foundations.Owners.Exceptions;
 using Xeptions;
 
 namespace Sheenam.Api.Services.Foundations.Accommodations
@@ -51,6 +52,13 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
                     new AlreadyExistAccommodationException(duplicateKeyException);
 
                 throw CreateAndLogDependencyValidationException(alreadyExistAccommodationException);
+            }
+            catch (DbUpdateConcurrencyException databaseUpdateConcurrencyException)
+            {
+                var lockedAccommodationException =
+                    new LockedAccommodationException(databaseUpdateConcurrencyException);
+
+                throw CreateAndLogDependencyValidationException(lockedAccommodationException);
             }
             catch (DbUpdateException databaseUpdateException)
             {
