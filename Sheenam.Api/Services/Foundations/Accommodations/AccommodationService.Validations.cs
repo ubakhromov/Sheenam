@@ -6,6 +6,7 @@
 using System;
 using Sheenam.Api.Models.Foundations.Accommodations;
 using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
+using Sheenam.Api.Models.Foundations.Owners;
 
 namespace Sheenam.Api.Services.Foundations.Accommodations
 {
@@ -99,7 +100,14 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
                (Rule: IsInvalid(accommodation.Area), Parameter: nameof(Accommodation.Area)),
                (Rule: IsInvalid(accommodation.Price), Parameter: nameof(Accommodation.Price)),
                (Rule: IsInvalid(accommodation.CreatedDate), Parameter: nameof(Accommodation.CreatedDate)),
-               (Rule: IsInvalid(accommodation.UpdatedDate), Parameter: nameof(Accommodation.UpdatedDate)));
+               (Rule: IsInvalid(accommodation.UpdatedDate), Parameter: nameof(Accommodation.UpdatedDate)),
+               (Rule: IsNotRecent(accommodation.UpdatedDate), Parameter: nameof(Accommodation.UpdatedDate)),
+           
+               (Rule: IsSame(
+                    firstDate: accommodation.UpdatedDate,
+                    secondDate: accommodation.CreatedDate,
+                    secondDateName: nameof(Accommodation.CreatedDate)),
+                Parameter: nameof(Accommodation.UpdatedDate)));
         }
 
         private bool IsDateNotRecent(DateTimeOffset date)
@@ -121,6 +129,15 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
                Condition = firstDate != secondDate,
                Message = $"Date is not the same as {secondDateName}"
            };
+
+        private static dynamic IsSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate == secondDate,
+                Message = $"Date is the same as {secondDateName}"
+            };
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
