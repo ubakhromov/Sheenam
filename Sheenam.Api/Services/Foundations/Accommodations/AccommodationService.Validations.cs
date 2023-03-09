@@ -88,6 +88,11 @@ namespace Sheenam.Api.Services.Foundations.Accommodations
             Message = "Date is not recent"
         };
 
+        private void ValidateAccommodationOnModify(Accommodation accommodation)
+        {
+            ValidateAccommodationIsNotNull(accommodation);
+        }
+
         private bool IsDateNotRecent(DateTimeOffset date)
         {
             DateTimeOffset currentDateTime =
