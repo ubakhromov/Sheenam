@@ -60,5 +60,52 @@ namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowNotFoundExceptionOnRemoveAccommodationByIdIsNotFounfAndLogItAsync()
+        {
+            // given
+            Guid inputAccommodationId = Guid.NewGuid();
+            Accommodation noAccommodation = null;
+
+            var notFoundAccommodationException =
+                new NotFoundAccommodationException(inputAccommodationId);
+
+            var expectedAccommodationValidationException =
+                new AccommodationValidationException(notFoundAccommodationException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectAccommodationByIdAsync(It.IsAny<Guid>()))
+                    .ReturnsAsync(noAccommodation);
+
+            // when
+            ValueTask<Accommodation> removeAccommodationByIdTask =
+                this.accommodationService.RemoveAccommodationByIdAsync(inputAccommodationId);
+
+            AccommodationValidationException actualAccommodationValidationException =
+                await Assert.ThrowsAsync<AccommodationValidationException>(() =>
+                    removeAccommodationByIdTask.AsTask());
+
+            // then
+            actualAccommodationValidationException.Should()
+                .BeEquivalentTo(expectedAccommodationValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectAccommodationByIdAsync(It.IsAny<Guid>()),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedAccommodationValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.DeleteAccommodationAsync(It.IsAny<Accommodation>()),
+                    Times.Never);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
