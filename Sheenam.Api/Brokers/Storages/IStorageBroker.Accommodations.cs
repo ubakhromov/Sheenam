@@ -16,5 +16,6 @@ namespace Sheenam.Api.Brokers.Storages
         IQueryable<Accommodation> SelectAllAccommodations();
         ValueTask<Accommodation> SelectAccommodationByIdAsync(Guid accommodationId);
         ValueTask<Accommodation> UpdateAccommodationAsync(Accommodation accommodation);
+        ValueTask<Accommodation> DeleteAccommodationAsync(Accommodation accommodation);
     }
 }

@@ -26,5 +26,8 @@ namespace Sheenam.Api.Brokers.Storages
 
         public async ValueTask<Accommodation> UpdateAccommodationAsync(Accommodation accommodation) =>
             await UpdateAsync(accommodation);
+
+        public async ValueTask<Accommodation> DeleteAccommodationAsync(Accommodation accommodation) =>
+            await DeleteAsync(accommodation);
     }
 }
