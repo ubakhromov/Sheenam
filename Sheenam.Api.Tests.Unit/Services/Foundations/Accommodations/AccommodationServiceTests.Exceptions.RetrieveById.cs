@@ -11,8 +11,6 @@ using System.Threading.Tasks;
 using System;
 using Xunit;
 using FluentAssertions;
-using Sheenam.Api.Models.Foundations.Accommodations.Exceptions;
-using Sheenam.Api.Models.Foundations.Accommodations;
 
 namespace Sheenam.Api.Tests.Unit.Services.Foundations.Accommodations
 {
